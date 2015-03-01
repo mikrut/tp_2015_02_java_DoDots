@@ -1,14 +1,25 @@
-package User;
+package user;
 
 /**
  * Created by Михаил on 01.03.2015.
  */
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MapAccountManager implements AccountManager {
-    Map<String, User> registeredList;
-    Map<String, User> loggedInList;
+    private Map<String, User> registeredList = new HashMap<>();
+    private Map<Long, User> loggedInList = new HashMap<>();
+    private AtomicLong userIdGenerator = new AtomicLong();
+
+    private static AccountManager singleton_manager = null;
+
+    public static AccountManager getManager() {
+        if (singleton_manager == null)
+            singleton_manager = new MapAccountManager();
+        return singleton_manager;
+    }
 
     public User findUser(String username) {
         return registeredList.getOrDefault(username, null);
@@ -16,26 +27,34 @@ public class MapAccountManager implements AccountManager {
     public User registerUser(String username, String password) {
         User usr = null;
         if(!registeredList.containsKey(username)) {
-            usr = new User(username, password);
+            usr = new User(username, password, userIdGenerator.getAndIncrement());
             registeredList.put(username, usr);
-            loggedInList.put(username, usr);
+            authenticate(username, password);
         }
         return usr;
     }
     public void deleteUser(String username) {
-        registeredList.remove(username);
-        loggedInList.remove(username);
+        if (registeredList.containsKey(username)) {
+            loggedInList.remove(registeredList.get(username).getID());
+            registeredList.remove(username);
+        }
     }
     public User authenticate(String username, String password) {
         User usr = null;
-        if((usr=findUser(username)) != null && usr.checkPassword(password)) {
-            loggedInList.put(username, usr);
+        Boolean b;
+        if((usr=findUser(username)) != null && (b = usr.checkPassword(password))) {
+            loggedInList.put(usr.getID(), usr);
         } else {
             usr = null;
         }
         return usr;
     }
-    public void logout(String username) {
-        loggedInList.remove(username);
+
+    public User getAuthenticated(Long id) {
+        return loggedInList.get(id);
+    }
+
+    public void logout(Long id) {
+        loggedInList.remove(id);
     }
 }

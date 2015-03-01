@@ -10,7 +10,11 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import servlets.TemplateServlet;
+import servlets.RegisterServlet;
+import servlets.UserinfoServlet;
+import servlets.LoginServlet;
+import servlets.LogoutServlet;
+
 import javax.servlet.Servlet;
 
 public class Main {
@@ -20,13 +24,23 @@ public class Main {
             port = Integer.parseInt(args[0]);
         }
 
-        Servlet templator = new TemplateServlet();
+        Servlet register = new RegisterServlet();
+        Servlet login = new LoginServlet();
+        Servlet logout = new LogoutServlet();
+        Servlet userinfo = new UserinfoServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(templator), "/");
+        context.addServlet(new ServletHolder(register), "/signin");
+        context.addServlet(new ServletHolder(login), "/login");
+        context.addServlet(new ServletHolder(logout), "/logout");
+        context.addServlet(new ServletHolder(userinfo), "/getinfo");
+
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setDirectoriesListed(true);
+        resource_handler.setResourceBase("public_html");
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{context});
+        handlers.setHandlers(new Handler[]{resource_handler, context});
 
         Server server = new Server(port);
         server.setHandler(handlers);

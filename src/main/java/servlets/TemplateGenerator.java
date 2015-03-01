@@ -23,15 +23,10 @@ public class TemplateGenerator {
         CFG = new Configuration();
         TemplateLoader[] loaders = null;
         try {
-             loaders = new TemplateLoader[]{
-                    new FileTemplateLoader(new File("./srv_tmpl")),
-                    new FileTemplateLoader(new File("./public_html"))
-            };
+            CFG.setTemplateLoader(new FileTemplateLoader(new File("./srv_tmpl")));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
-        CFG.setTemplateLoader(mtl);
     }
 
     public void generate(Writer writer, String path, Map<String,Object> data) {

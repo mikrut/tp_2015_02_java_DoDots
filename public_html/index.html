@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello, world!</title>
+<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+</head>
+<body>
+<form name="registration" id="reg">
+  <input type="text" name="username" value="uname"></input><br/>
+  <input type="password" name="password" value="mysecretpwd"></input><br/>
+  <input type="submit" value="Register"></input>
+</form>
+
+<script type="text/javascript">
+  $("#reg").submit(function(event) {
+    var formdata = $("#reg").serialize();
+    $.ajax({
+      type: "POST",
+      url: "/signin",
+      data: formdata,
+      success: function(data) {
+        console.log(data);
+      }
+    });
+    event.preventDefault();
+  });
+</script>
+
+</body>
+</html>
