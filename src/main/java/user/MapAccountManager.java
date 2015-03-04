@@ -13,12 +13,19 @@ public class MapAccountManager implements AccountManager {
     private Map<Long, User> loggedInList = new HashMap<>();
     private AtomicLong userIdGenerator = new AtomicLong();
 
-    private static AccountManager singleton_manager = null;
+    private static AccountManager singleton_manager = new MapAccountManager();
+
+    private MapAccountManager() {
+        User admin = registerUser("admin", "admin");
+        admin.setStatus(User.Rights.ADMIN);
+    }
 
     public static AccountManager getManager() {
-        if (singleton_manager == null)
-            singleton_manager = new MapAccountManager();
         return singleton_manager;
+    }
+
+    public Map<String, User> getAllRegistered(){
+        return registeredList;
     }
 
     public User findUser(String username) {

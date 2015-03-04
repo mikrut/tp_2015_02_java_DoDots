@@ -14,7 +14,7 @@
 <form name="login" id="log">
   <input type="text" name="username" value="uname"></input><br/>
   <input type="password" name="password" value="mysecretpwd"></input><br/>
-  <input type="submit" value="Login"></input>
+  <input type="submit" value="Register"></input>
 </form>
 
 
@@ -24,19 +24,6 @@
     $.ajax({
       type: "POST",
       url: "/signin",
-      data: formdata,
-      success: function(data) {
-        console.log(data);
-      }
-    });
-    event.preventDefault();
-  });
-
-  $("#log").submit(function(event) {
-    var formdata = $("#log").serialize();
-    $.ajax({
-      type: "POST",
-      url: "/login",
       data: formdata,
       success: function(data) {
         console.log(data);

@@ -10,10 +10,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import servlets.RegisterServlet;
-import servlets.UserinfoServlet;
-import servlets.LoginServlet;
-import servlets.LogoutServlet;
+import servlets.*;
 
 import javax.servlet.Servlet;
 
@@ -34,6 +31,7 @@ public class Main {
         context.addServlet(new ServletHolder(login), "/login");
         context.addServlet(new ServletHolder(logout), "/logout");
         context.addServlet(new ServletHolder(userinfo), "/getinfo");
+        context.addServlet(new ServletHolder(new AdminServlet()), "/getadmin");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

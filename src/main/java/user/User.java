@@ -9,28 +9,30 @@ import sun.plugin2.message.Message;
 import java.security.MessageDigest;
 
 public class User {
+    public enum Rights {ADMIN, BASIC};
     private String username;
     private String passhash;
     private Long userid;
-    //private String secretKey;
+    private Rights status;
 
     public User(String username, String password, Long uid) {
+        this(username, password, uid, Rights.BASIC);
+    }
+
+    public User(String username, String password, Long uid, Rights r) {
         this.username = username;
         this.passhash = makePassHash(password);
         this.userid= uid;
+        this.status = r;
     }
 
-    /*public void setSecretKey(String key) {
-        secretKey = key;
+    public void setStatus(Rights s) {
+        status = s;
     }
 
-    public String getSecretKey() {
-        return secretKey;
+    public Rights getStatus() {
+        return status;
     }
-
-    public Boolean checkSecretKey(String key) {
-        return secretKey == key && key != null;
-    }*/
 
     public String getUsername() {
         return username;
