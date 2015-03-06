@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello, world!</title>
+<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+</head>
+<body>
+
+<div id="userinfo">
+  Username: <a href="/userpage.html"><div class="name"></div></a><br/>
+  <button onclick="logout()">Logout</button><br/>
+  <div class="email"></div>
+  <div class="usrs">
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  var getadmininfo = function() {
+    $.ajax({
+      type: "GET",
+      url: "/getadmin",
+      success: function(data) {
+        data = jQuery.parseJSON(data);
+        $(".usrs").empty();
+        $(".usrs").append("Admin info (user list): <ul>");
+        for(var i = 0; i < data.users.length; i++) {
+          $(".usrs ul").append("<li>"+i+" "+data.users[i].username+"</li>")
+        }
+        $("#userinfo").append("<button onclick='stopserver()'>stop server</button>")
+      }
+    })
+  }
+  var stopserver = function() {
+    $.ajax({
+      type: "POST",
+      url: "/getadmin/stop"
+    })
+  }
+
+  var getinfo = function() {
+    $.ajax({
+      type: "GET",
+      url: "/getinfo",
+      success: function(data) {
+        data = jQuery.parseJSON(data);
+        $("#userinfo .name").html(data.username);
+        if(data.username == 'Guest') {
+          window.location.replace('http://localhost:8080/registration.html');
+        }
+        if(data.username == 'admin') {
+          getadmininfo();
+        }
+      }
+    })
+  }
+  var logout = function() {
+    $.ajax({
+      type: "POST",
+      url: "/logout"
+    }).done(window.location.replace('http://localhost:8080/'));
+  }
+  $(document).ready(getinfo)
+</script>
+</body>
+</html>

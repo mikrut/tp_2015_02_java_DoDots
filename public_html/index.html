@@ -5,32 +5,47 @@
 <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
 </head>
 <body>
-<form name="registration" id="reg">
-  <input type="text" name="username" value="uname"></input><br/>
-  <input type="password" name="password" value="mysecretpwd"></input><br/>
-  <input type="submit" value="Register"></input>
-</form>
 
+<div id="userinfo">
+  <a href="/userpage.html"><div class="name"></div></a><br/>
+  <a onclick="logout()">Logout</a><br/>
+  <div class="email"></div>
+</div>
+
+<h1>Login</h1>
 <form name="login" id="log">
   <input type="text" name="username" value="uname"></input><br/>
   <input type="password" name="password" value="mysecretpwd"></input><br/>
-  <input type="submit" value="Login"></input>
+  <input type="submit" value="Login"></input><br/>
+  <span id="loginmsg"></span>
 </form>
 
-
 <script type="text/javascript">
-  $("#reg").submit(function(event) {
-    var formdata = $("#reg").serialize();
+
+  var unsetinfo = function() {
+    $("#userinfo.name").empty();
+    $("#userinfo.email").empty();
+  }
+
+  var getinfo = function() {
+    $.ajax({
+      type: "GET",
+      url: "/getinfo",
+      success: function(data) {
+        data = jQuery.parseJSON(data);
+        $("#userinfo .name").html(data.username);
+      }
+    })
+  }
+
+  var logout = function() {
     $.ajax({
       type: "POST",
-      url: "/signin",
-      data: formdata,
-      success: function(data) {
-        console.log(data);
-      }
-    });
-    event.preventDefault();
-  });
+      url: "/logout"
+    }).done(getinfo)
+  }
+
+  $(document).ready(getinfo)
 
   $("#log").submit(function(event) {
     var formdata = $("#log").serialize();
@@ -38,10 +53,16 @@
       type: "POST",
       url: "/login",
       data: formdata,
-      success: function(data) {
-        console.log(data);
-      }
-    });
+    })
+    .done(function(data) {
+        data = jQuery.parseJSON(data);
+        $("#loginmsg").html(data.message);
+        if (data.status == "OK") {
+          getinfo();
+        } else {
+
+        }
+      });
     event.preventDefault();
   });
 </script>

@@ -14,13 +14,6 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class LogoutServlet extends HttpServlet {
-    public void doGet(HttpServletRequest request,
-                       HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        MapAccountManager.getManager().logout((Long) session.getAttribute("userID"));
-        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.sendRedirect("/");
-    }
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();

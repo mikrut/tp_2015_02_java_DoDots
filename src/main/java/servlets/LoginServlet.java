@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userID", usr.getID());
         } catch (Exception e) {
             pageVariables.put("status", "Error");
-            pageVariables.put("message", "Login fail");
+            pageVariables.put("message", e.getMessage());
         }
         tg.generate(response.getWriter(), "login.json", pageVariables);
     }

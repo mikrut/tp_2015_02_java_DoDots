@@ -21,6 +21,8 @@ public class Main {
             port = Integer.parseInt(args[0]);
         }
 
+        Server server = new Server(port);
+
         Servlet register = new RegisterServlet();
         Servlet login = new LoginServlet();
         Servlet logout = new LogoutServlet();
@@ -31,7 +33,7 @@ public class Main {
         context.addServlet(new ServletHolder(login), "/login");
         context.addServlet(new ServletHolder(logout), "/logout");
         context.addServlet(new ServletHolder(userinfo), "/getinfo");
-        context.addServlet(new ServletHolder(new AdminServlet()), "/getadmin");
+        context.addServlet(new ServletHolder(new AdminServlet(server)), "/getadmin/*");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
@@ -40,7 +42,7 @@ public class Main {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
 
-        Server server = new Server(port);
+
         server.setHandler(handlers);
 
         server.start();

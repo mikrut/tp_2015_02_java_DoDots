@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
             session.setAttribute("userID", user.getID());
         } catch (Exception e) {
             pageVariables.put("status", "Error");
-            pageVariables.put("message", "Registration failed");
+            pageVariables.put("message", e.getMessage());
         }
 
         tg.generate(response.getWriter(), "reg.json", pageVariables);

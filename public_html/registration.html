@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello, world!</title>
+<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+</head>
+<body>
+
+<h1>Registration</h1>
+<form name="registration" id="reg">
+  <input type="text" name="username" value="uname"></input><br/>
+  <input type="password" name="password" value="mysecretpwd"></input><br/>
+  <input type="submit" value="Register"></input><br/>
+  <span id="regmsg"></span>
+</form>
+
+<script type="text/javascript">
+  $("#reg").submit(function(event) {
+    var formdata = $("#reg").serialize();
+    $.ajax({
+      type: "POST",
+      url: "/signin",
+      data: formdata,
+      success: function(data) {
+        data = jQuery.parseJSON(data);
+        $("#regmsg").html(data.message);
+        if(data.status=='OK'){
+          window.location.replace('http://localhost:8080/')
+        }
+      }
+    });
+    event.preventDefault();
+    return false;
+  });
+</script>
+
+</body>
+</html>

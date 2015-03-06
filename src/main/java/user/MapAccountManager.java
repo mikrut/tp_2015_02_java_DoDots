@@ -16,8 +16,12 @@ public class MapAccountManager implements AccountManager {
     private static AccountManager singleton_manager = new MapAccountManager();
 
     private MapAccountManager() {
-        User admin = registerUser("admin", "admin");
-        admin.setStatus(User.Rights.ADMIN);
+        try {
+            User admin = registerUser("admin", "admin");
+            admin.setStatus(User.Rights.ADMIN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static AccountManager getManager() {
@@ -31,12 +35,18 @@ public class MapAccountManager implements AccountManager {
     public User findUser(String username) {
         return registeredList.getOrDefault(username, null);
     }
-    public User registerUser(String username, String password) {
+    public User registerUser(String username, String password) throws Exception {
         User usr = null;
         if(!registeredList.containsKey(username)) {
             usr = new User(username, password, userIdGenerator.getAndIncrement());
             registeredList.put(username, usr);
-            authenticate(username, password);
+            try {
+                authenticate(username, password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new Exception("This username already exists");
         }
         return usr;
     }
@@ -46,13 +56,17 @@ public class MapAccountManager implements AccountManager {
             registeredList.remove(username);
         }
     }
-    public User authenticate(String username, String password) {
+    public User authenticate(String username, String password) throws Exception {
         User usr = null;
         Boolean b;
-        if((usr=findUser(username)) != null && (b = usr.checkPassword(password))) {
-            loggedInList.put(usr.getID(), usr);
+        if((usr=findUser(username)) != null){
+            if((b = usr.checkPassword(password))) {
+                loggedInList.put(usr.getID(), usr);
+            } else {
+                throw new Exception("Incorrect password");
+            }
         } else {
-            usr = null;
+            throw new Exception("User not found");
         }
         return usr;
     }
