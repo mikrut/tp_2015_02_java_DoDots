@@ -10,7 +10,7 @@
 * Фатхи Дмитрий, Fatkhi, ?
 
 Подробное о проекте можно прочесть на сайте [Технопарка] [1]
-[1]: tp.mail.ru
+[1]: http://tp.mail.ru/ "Технопарк@Mail.ru"
 
 # API
 
@@ -23,7 +23,13 @@
 
 **Response**
 * Format: JSON
-* Data: {"status": "OK"/"Error", "message": ${some_message} }
+* Data:
+```
+{
+  "status": "OK"/"Error",
+  "message": ${some_message}
+}
+```
 
 ## Logout
 
@@ -45,7 +51,13 @@
 
 **Response**
 * Format: JSON
-* Data: { "status": "OK"/"Error", "message": ${some_message}}
+* Data:
+```
+{
+  "status": "OK"/"Error",
+  "message": ${some_message}
+}
+```
 
 ## User info
 
@@ -55,7 +67,13 @@
 
 **Response**
 * Format: JSON
-* Data: {"loggedIn": true/false, "username": ${username}}
+* Data:
+```
+{
+  "loggedIn": true/false,
+  "username": ${username}
+}
+```
 
 ## Admin info
 _for admin only_
