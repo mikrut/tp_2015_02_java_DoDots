@@ -67,7 +67,7 @@ _for admin only_
 **Response**
 * Format: JSON / Forbidden
 * Data:
-'''
+```
 {
   "status":"OK",
   "users":[
@@ -77,7 +77,7 @@ _for admin only_
     }
   ]
 }
-'''
+```
 
 ## Server stop
 _for admin only_
