@@ -27,9 +27,8 @@ public class AdminServlet extends HttpServlet {
                        HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
-        Long uid = (Long) session.getAttribute("userID");
 
-        User usr = MapAccountManager.getManager().getAuthenticated(uid);
+        User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
         if(usr != null && usr.getStatus() == User.Rights.ADMIN) {
             pageVariables.put("status", "OK");
             Map<String, User> m = MapAccountManager.getManager().getAllRegistered();
@@ -46,7 +45,7 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Long uid = (Long) session.getAttribute("userID");
 
-        User usr = MapAccountManager.getManager().getAuthenticated(uid);
+        User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
         if(usr != null && usr.getStatus() == User.Rights.ADMIN) {
             if (request.getPathInfo() != null) {
                 try {

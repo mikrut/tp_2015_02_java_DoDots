@@ -30,11 +30,9 @@ public class RegisterServlet extends HttpServlet {
 
         try {
             User user = MapAccountManager.getManager().registerUser(username, password);
-
+            MapAccountManager.getManager().addSession(session.getId(), user);
             pageVariables.put("status", "OK");
             pageVariables.put("message", "Registration complete");
-
-            session.setAttribute("userID", user.getID());
         } catch (Exception e) {
             pageVariables.put("status", "Error");
             pageVariables.put("message", e.getMessage());

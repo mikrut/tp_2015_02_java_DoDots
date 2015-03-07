@@ -13,6 +13,7 @@ public interface AccountManager {
     public void deleteUser(String username);
 
     public User authenticate(String username, String password) throws Exception;
-    public User getAuthenticated(Long id);
-    public void logout(Long id);
+    public void addSession(String sessionId, User usr);
+    public User getAuthenticated(String sessionId);
+    public void logout(String sessionId);
 }

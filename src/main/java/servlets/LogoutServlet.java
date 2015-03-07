@@ -17,7 +17,7 @@ public class LogoutServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        MapAccountManager.getManager().logout((Long) session.getAttribute("userID"));
+        MapAccountManager.getManager().logout(session.getId());
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
         response.sendRedirect("/");
     }

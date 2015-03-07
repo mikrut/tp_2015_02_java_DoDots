@@ -20,19 +20,16 @@ public class LoginServlet extends HttpServlet {
                        HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
-        if((Long) session.getAttribute("userID") != null) {
-            MapAccountManager.getManager().logout((Long) session.getAttribute("userID"));
-            session.setAttribute("userID", null);
-        }
+        MapAccountManager.getManager().logout(session.getId());
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User usr = null;
         try {
             usr = MapAccountManager.getManager().authenticate(username, password);
+            MapAccountManager.getManager().addSession(session.getId(), usr);
             pageVariables.put("status", "OK");
             pageVariables.put("message", "Login success");
-            session.setAttribute("userID", usr.getID());
         } catch (Exception e) {
             pageVariables.put("status", "Error");
             pageVariables.put("message", e.getMessage());

@@ -4,13 +4,16 @@ package user;
  * Created by Михаил on 01.03.2015.
  */
 
+import com.sun.xml.internal.ws.util.QNameMap;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MapAccountManager implements AccountManager {
     private Map<String, User> registeredList = new HashMap<>();
-    private Map<Long, User> loggedInList = new HashMap<>();
+    private Map<String, User> loggedInList = new HashMap<>();
     private AtomicLong userIdGenerator = new AtomicLong();
 
     private static AccountManager singleton_manager = new MapAccountManager();
@@ -51,18 +54,19 @@ public class MapAccountManager implements AccountManager {
         return usr;
     }
     public void deleteUser(String username) {
+        Vector<String> sessionIds = new Vector<String>();
         if (registeredList.containsKey(username)) {
-            loggedInList.remove(registeredList.get(username).getID());
+            for(Map.Entry<String,User> record : loggedInList.entrySet()) {
+                if(record.getValue().getUsername().equals(username))
+                    logout(record.getKey());
+            }
             registeredList.remove(username);
         }
     }
     public User authenticate(String username, String password) throws Exception {
         User usr = null;
-        Boolean b;
         if((usr=findUser(username)) != null){
-            if((b = usr.checkPassword(password))) {
-                loggedInList.put(usr.getID(), usr);
-            } else {
+            if(!usr.checkPassword(password)) {
                 throw new Exception("Incorrect password");
             }
         } else {
@@ -71,11 +75,15 @@ public class MapAccountManager implements AccountManager {
         return usr;
     }
 
-    public User getAuthenticated(Long id) {
-        return loggedInList.get(id);
+    public void addSession(String sessionId, User usr){
+        loggedInList.put(sessionId, usr);
     }
 
-    public void logout(Long id) {
-        loggedInList.remove(id);
+    public User getAuthenticated(String sessionId) {
+        return loggedInList.get(sessionId);
+    }
+
+    public void logout(String sessionId) {
+        loggedInList.remove(sessionId);
     }
 }

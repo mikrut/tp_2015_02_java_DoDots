@@ -21,8 +21,7 @@ public class UserinfoServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
         User usr = MapAccountManager.getManager()
-                .getAuthenticated((Long) session.getAttribute("userID"));
-        Long uid = (Long) session.getAttribute("userID");
+                .getAuthenticated(session.getId());
         if (usr != null) {
             pageVariables.put("loggedIn", true);
             pageVariables.put("username", usr.getUsername());
