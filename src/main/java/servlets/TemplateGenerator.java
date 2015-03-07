@@ -22,6 +22,7 @@ public class TemplateGenerator {
     public TemplateGenerator() {
         CFG = new Configuration();
         TemplateLoader[] loaders = null;
+
         try {
             CFG.setTemplateLoader(new FileTemplateLoader(new File("./srv_tmpl")));
         } catch (Exception e) {

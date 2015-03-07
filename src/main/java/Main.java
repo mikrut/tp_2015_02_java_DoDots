@@ -27,13 +27,14 @@ public class Main {
         Servlet login = new LoginServlet();
         Servlet logout = new LogoutServlet();
         Servlet userinfo = new UserinfoServlet();
+        Servlet admin = new AdminServlet(server);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(register), "/signin");
         context.addServlet(new ServletHolder(login), "/login");
         context.addServlet(new ServletHolder(logout), "/logout");
         context.addServlet(new ServletHolder(userinfo), "/getinfo");
-        context.addServlet(new ServletHolder(new AdminServlet(server)), "/getadmin/*");
+        context.addServlet(new ServletHolder(admin), "/getadmin/*");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

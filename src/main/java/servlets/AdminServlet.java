@@ -29,6 +29,7 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
+
         if(usr != null && usr.getStatus() == User.Rights.ADMIN) {
             pageVariables.put("status", "OK");
             Map<String, User> m = MapAccountManager.getManager().getAllRegistered();
@@ -37,7 +38,6 @@ public class AdminServlet extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-
     }
 
     public void doPost(HttpServletRequest request,
@@ -46,7 +46,8 @@ public class AdminServlet extends HttpServlet {
         Long uid = (Long) session.getAttribute("userID");
 
         User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
-        if(usr != null && usr.getStatus() == User.Rights.ADMIN) {
+
+        if (usr != null && usr.getStatus() == User.Rights.ADMIN) {
             if (request.getPathInfo() != null) {
                 try {
                     server.stop();

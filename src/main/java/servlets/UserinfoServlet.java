@@ -15,13 +15,17 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class UserinfoServlet extends HttpServlet {
+
     private TemplateGenerator tg = new TemplateGenerator();
+
     public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
+
         HttpSession session = request.getSession();
         User usr = MapAccountManager.getManager()
                 .getAuthenticated(session.getId());
+
         if (usr != null) {
             pageVariables.put("loggedIn", true);
             pageVariables.put("username", usr.getUsername());
@@ -29,6 +33,7 @@ public class UserinfoServlet extends HttpServlet {
             pageVariables.put("loggedIn", false);
             pageVariables.put("username", "Guest");
         }
+
         tg.generate(response.getWriter(), "userinfo.json", pageVariables);
     }
 }

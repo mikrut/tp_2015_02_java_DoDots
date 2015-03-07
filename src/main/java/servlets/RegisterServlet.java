@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterServlet extends HttpServlet {
+
     private TemplateGenerator tg = new TemplateGenerator();
+
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();

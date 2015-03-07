@@ -38,10 +38,13 @@ public class MapAccountManager implements AccountManager {
     public User findUser(String username) {
         return registeredList.getOrDefault(username, null);
     }
+
     public User registerUser(String username, String password) throws Exception {
         User usr = null;
+
         if(!registeredList.containsKey(username)) {
             usr = new User(username, password, userIdGenerator.getAndIncrement());
+
             registeredList.put(username, usr);
             try {
                 authenticate(username, password);
@@ -53,8 +56,10 @@ public class MapAccountManager implements AccountManager {
         }
         return usr;
     }
+
     public void deleteUser(String username) {
         Vector<String> sessionIds = new Vector<String>();
+
         if (registeredList.containsKey(username)) {
             for(Map.Entry<String,User> record : loggedInList.entrySet()) {
                 if(record.getValue().getUsername().equals(username))
@@ -65,6 +70,7 @@ public class MapAccountManager implements AccountManager {
     }
     public User authenticate(String username, String password) throws Exception {
         User usr = null;
+
         if((usr=findUser(username)) != null){
             if(!usr.checkPassword(password)) {
                 throw new Exception("Incorrect password");

@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public class LoginServlet extends HttpServlet {
     private TemplateGenerator tg = new TemplateGenerator();
+
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
@@ -25,6 +26,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User usr = null;
+
         try {
             usr = MapAccountManager.getManager().authenticate(username, password);
             MapAccountManager.getManager().addSession(session.getId(), usr);
@@ -34,6 +36,7 @@ public class LoginServlet extends HttpServlet {
             pageVariables.put("status", "Error");
             pageVariables.put("message", e.getMessage());
         }
+
         tg.generate(response.getWriter(), "login.json", pageVariables);
     }
 }

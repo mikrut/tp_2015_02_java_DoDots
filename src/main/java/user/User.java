@@ -48,6 +48,7 @@ public class User {
 
     public static String makePassHash(String password) {
         String result;
+
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(password.getBytes());
@@ -55,6 +56,7 @@ public class User {
         } catch (Exception e) {
             result = password;
         }
+
         return result;
     }
 }
