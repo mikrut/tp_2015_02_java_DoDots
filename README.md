@@ -46,7 +46,7 @@
 
 **Request**
 * Method: POST
-* URL: /register
+* URL: /signin
 * Data: username, password
 
 **Response**
