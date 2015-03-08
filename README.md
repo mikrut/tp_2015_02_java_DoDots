@@ -19,7 +19,7 @@
 **Request**
 * Method: POST
 * URL: /login
-* Data: username, password
+* Data: name, password
 
 **Response**
 * Format: JSON
@@ -47,7 +47,7 @@
 **Request**
 * Method: POST
 * URL: /signin
-* Data: username, password
+* Data: name, password
 
 **Response**
 * Format: JSON

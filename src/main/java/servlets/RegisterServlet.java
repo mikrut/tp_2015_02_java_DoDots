@@ -25,7 +25,7 @@ public class RegisterServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
 
-        String username = request.getParameter("username");
+        String username = request.getParameter("name");
         String password = request.getParameter("password");
 
         HttpSession session = request.getSession();

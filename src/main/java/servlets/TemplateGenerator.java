@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class TemplateGenerator {
-    private static final String TEMPL_DIR = "srv_tmpl";
+    private static final String TEMPL_DIR = "./srv_tmpl";
     private static Configuration CFG;
 
     public TemplateGenerator() {
@@ -24,7 +24,7 @@ public class TemplateGenerator {
         TemplateLoader[] loaders = null;
 
         try {
-            CFG.setTemplateLoader(new FileTemplateLoader(new File("./srv_tmpl")));
+            CFG.setTemplateLoader(new FileTemplateLoader(new File(TEMPL_DIR)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class TemplateGenerator {
 
     public void generate(Writer writer, String path, Map<String,Object> data) {
         try {
-            if(path == "/") path = "/index.html";
+            if(path.equals("/")) path = "/index.html";
             Template template = CFG.getTemplate(path);
             template.process(data, writer);
         } catch (IOException | TemplateException e) {

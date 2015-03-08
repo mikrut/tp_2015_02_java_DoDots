@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         MapAccountManager.getManager().logout(session.getId());
 
-        String username = request.getParameter("username");
+        String username = request.getParameter("name");
         String password = request.getParameter("password");
         User usr = null;
 
