@@ -11,6 +11,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import servlets.*;
+import user.AccountManager;
+import user.MapAccountManager;
 
 import javax.servlet.Servlet;
 
@@ -22,12 +24,13 @@ public class Main {
         }
 
         Server server = new Server(port);
+        AccountManager mgr = MapAccountManager.getManager();
 
-        Servlet register = new RegisterServlet();
-        Servlet login = new LoginServlet();
-        Servlet logout = new LogoutServlet();
-        Servlet userinfo = new UserinfoServlet();
-        Servlet admin = new AdminServlet(server);
+        Servlet register = new RegisterServlet(mgr);
+        Servlet login = new LoginServlet(mgr);
+        Servlet logout = new LogoutServlet(mgr);
+        Servlet userinfo = new UserinfoServlet(mgr);
+        Servlet admin = new AdminServlet(server, mgr);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(register), "/signin");

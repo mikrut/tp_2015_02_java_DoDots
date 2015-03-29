@@ -12,7 +12,11 @@ public interface AccountManager {
     public Map<String, User> getAllRegistered();
     public void deleteUser(String username);
 
-    public User authenticate(String username, String password) throws Exception;
+    public Integer getUserCount();
+    public Integer getSessionCount();
+
+    public void authenticate(String sessionId, String username, String password) throws Exception;
+    public User checkAuthable(String username, String password) throws Exception;
     public void addSession(String sessionId, User usr);
     public User getAuthenticated(String sessionId);
     public void logout(String sessionId);

@@ -4,11 +4,8 @@ package user;
  * Created by Михаил on 01.03.2015.
  */
 
-import com.sun.xml.internal.ws.util.QNameMap;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MapAccountManager implements AccountManager {
@@ -18,7 +15,7 @@ public class MapAccountManager implements AccountManager {
 
     private static AccountManager singleton_manager = new MapAccountManager();
 
-    private MapAccountManager() {
+    public MapAccountManager() {
         try {
             User admin = registerUser("admin", "admin");
             admin.setStatus(User.Rights.ADMIN);
@@ -35,19 +32,27 @@ public class MapAccountManager implements AccountManager {
         return registeredList;
     }
 
+    public Integer getUserCount() {
+        return registeredList.size();
+    }
+
+    public Integer getSessionCount() {
+        return loggedInList.size();
+    }
+
     public User findUser(String username) {
         return registeredList.getOrDefault(username, null);
     }
 
     public User registerUser(String username, String password) throws Exception {
-        User usr = null;
+        User usr;
 
         if(!registeredList.containsKey(username)) {
             usr = new User(username, password, userIdGenerator.getAndIncrement());
 
             registeredList.put(username, usr);
             try {
-                authenticate(username, password);
+                checkAuthable(username, password);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,8 +63,6 @@ public class MapAccountManager implements AccountManager {
     }
 
     public void deleteUser(String username) {
-        Vector<String> sessionIds = new Vector<String>();
-
         if (registeredList.containsKey(username)) {
             for(Map.Entry<String,User> record : loggedInList.entrySet()) {
                 if(record.getValue().getUsername().equals(username))
@@ -68,8 +71,13 @@ public class MapAccountManager implements AccountManager {
             registeredList.remove(username);
         }
     }
-    public User authenticate(String username, String password) throws Exception {
-        User usr = null;
+
+    public void authenticate(String sessionId, String username, String password) throws Exception {
+        addSession(sessionId, checkAuthable(username, password));
+    }
+
+    public User checkAuthable(String username, String password) throws Exception {
+        User usr;
 
         if((usr=findUser(username)) != null){
             if(!usr.checkPassword(password)) {

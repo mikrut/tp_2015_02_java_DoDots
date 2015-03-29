@@ -1,7 +1,6 @@
 package servlets;
 
 import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;

@@ -1,6 +1,6 @@
 package servlets;
 
-import user.MapAccountManager;
+import user.AccountManager;
 import user.User;
 
 import javax.servlet.http.HttpServlet;
@@ -16,20 +16,24 @@ import java.util.Map;
  */
 public class LoginServlet extends HttpServlet {
     private TemplateGenerator tg = new TemplateGenerator();
+    private AccountManager manager;
+
+    public LoginServlet(AccountManager mgr) {
+        manager = mgr;
+    }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
-        MapAccountManager.getManager().logout(session.getId());
+        manager.logout(session.getId());
 
         String username = request.getParameter("name");
         String password = request.getParameter("password");
         User usr = null;
 
         try {
-            usr = MapAccountManager.getManager().authenticate(username, password);
-            MapAccountManager.getManager().addSession(session.getId(), usr);
+            manager.authenticate(session.getId(), username, password);
             pageVariables.put("status", "OK");
             pageVariables.put("message", "Login success");
         } catch (Exception e) {

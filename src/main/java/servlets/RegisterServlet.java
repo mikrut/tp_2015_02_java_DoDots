@@ -6,7 +6,7 @@ package servlets;
 
 import java.io.IOException;
 
-import user.MapAccountManager;
+import user.AccountManager;
 import user.User;
 
 import javax.servlet.http.HttpServlet;
@@ -17,8 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterServlet extends HttpServlet {
+    private AccountManager manager;
 
     private TemplateGenerator tg = new TemplateGenerator();
+
+    public RegisterServlet(AccountManager mgr) {
+        manager = mgr;
+    }
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
@@ -31,8 +36,8 @@ public class RegisterServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
-            User user = MapAccountManager.getManager().registerUser(username, password);
-            MapAccountManager.getManager().addSession(session.getId(), user);
+            User user = manager.registerUser(username, password);
+            manager.addSession(session.getId(), user);
             pageVariables.put("status", "OK");
             pageVariables.put("message", "Registration complete");
         } catch (Exception e) {

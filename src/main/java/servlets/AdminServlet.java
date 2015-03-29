@@ -1,7 +1,7 @@
 package servlets;
 
 import org.eclipse.jetty.server.Server;
-import user.MapAccountManager;
+import user.AccountManager;
 import user.User;
 
 import javax.servlet.http.HttpServlet;
@@ -18,9 +18,11 @@ import java.util.Map;
 public class AdminServlet extends HttpServlet {
     private TemplateGenerator tg = new TemplateGenerator();
     private Server server;
+    private AccountManager manager;
 
-    public AdminServlet(Server server){
+    public AdminServlet(Server server, AccountManager mgr){
         this.server = server;
+        this.manager = mgr;
     }
 
     public void doGet(HttpServletRequest request,
@@ -28,11 +30,11 @@ public class AdminServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
 
-        User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
+        User usr = manager.getAuthenticated(session.getId());
 
         if(usr != null && usr.getStatus() == User.Rights.ADMIN) {
             pageVariables.put("status", "OK");
-            Map<String, User> m = MapAccountManager.getManager().getAllRegistered();
+            Map<String, User> m = manager.getAllRegistered();
             pageVariables.put("users", m);
             tg.generate(response.getWriter(), "admin.json", pageVariables);
         } else {
@@ -43,9 +45,8 @@ public class AdminServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) {
         HttpSession session = request.getSession();
-        Long uid = (Long) session.getAttribute("userID");
 
-        User usr = MapAccountManager.getManager().getAuthenticated(session.getId());
+        User usr = manager.getAuthenticated(session.getId());
 
         if (usr != null && usr.getStatus() == User.Rights.ADMIN) {
             if (request.getPathInfo() != null) {
