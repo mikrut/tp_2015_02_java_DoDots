@@ -106,3 +106,30 @@ _for admin only_
 
 **Response**
 * None
+
+## Game
+
+**Request**
+* Method: WebSocket
+* Type: JSON
+* URL: /chat
+
+```
+{
+  "row":"1",
+  "col":"2"
+}
+```
+
+**Response**
+* Type: JSON
+```
+{
+  "message":"Data accepted",
+  "board":[[0,0,0,0,0],
+           [0,0,1,0,0],
+           [0,0,0,0,0],
+           [0,0,0,0,0],
+           [0,0,0,0,0]],
+  "status":"Error/OK"}
+```
