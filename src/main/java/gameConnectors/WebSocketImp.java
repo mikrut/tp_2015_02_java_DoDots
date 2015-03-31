@@ -1,5 +1,7 @@
 package gameConnectors;
 
+import org.eclipse.jetty.websocket.api.BatchMode;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import user.User;
 
@@ -25,9 +27,12 @@ public class WebSocketImp implements MyWebSocket {
     @Override
     public void sendMessage(String message) {
         try {
-            session.getRemote().sendString(message);
+            if(session != null && session.isOpen())
+                session.getRemote().sendString(message);
         } catch (Exception e) {
-            System.out.print(e);
+            game.informClosed(this);
+            session.close();
+            System.out.println("Error in sendMessage: " + e.toString());
         }
     }
 
@@ -52,11 +57,6 @@ public class WebSocketImp implements MyWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        try {
-            session.getRemote().sendString("Vse...");
-        } catch (Exception e) {
-
-        }
         if(game != null)
             game.informClosed(this);
     }
@@ -64,6 +64,8 @@ public class WebSocketImp implements MyWebSocket {
     @Override
     public void setGame(Game game) {
         this.game = game;
+        if(client == null && session != null)
+            session.close();
     }
 
     @Override

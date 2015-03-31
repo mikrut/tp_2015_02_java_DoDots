@@ -10,4 +10,5 @@ public interface MyWebSocket {
     public void sendMessage(String message);
     public User getClient();
     public void setGame(Game g);
+    public Session getSession();
 }

@@ -13,8 +13,12 @@ public class FastGameProviderImp implements GameProvider {
         Game game;
         if (socket == null) {
             socket = sock;
+            System.out.println("Added sock");
+            sock.sendMessage("I see you!");
         } else {
-            game = new ChatGameImp(socket, sock);
+            System.out.println("new game");
+            game = new ClickGameImp(socket, sock);//new ChatGameImp(socket, sock);
+            socket = null;
         }
     }
 }

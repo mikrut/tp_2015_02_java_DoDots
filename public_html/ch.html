@@ -2,10 +2,20 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Jetty WebSocket: Chat</title>
+    <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
     <script type="text/javascript">
         var ws;
 
         init = function () {
+            $nick = document.getElementById("username");
+            $.ajax({
+              type: "GET",
+              url: "/getinfo",
+              success: function(data) {
+                data = jQuery.parseJSON(data);
+                $nick.html(data.name);
+              }
+            })
             ws = new WebSocket("ws://localhost:8080/chat");
             ws.onopen = function (event) {
 
@@ -23,7 +33,7 @@
         function sendMessage() {
             var messageField = document.getElementById("message");
             var userNameField = document.getElementById("username");
-            var message = userNameField.value + ":" + messageField.value;
+            var message = messageField.value//userNameField.value + ":" + messageField.value;
             ws.send(message);
             messageField.value = '';
         }

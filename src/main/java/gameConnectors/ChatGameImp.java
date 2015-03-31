@@ -1,5 +1,7 @@
 package gameConnectors;
 
+import org.json.simple.JSONObject;
+
 /**
  * Created by mihanik on 31.03.15.
  */
