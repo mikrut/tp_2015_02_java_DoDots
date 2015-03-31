@@ -32,6 +32,7 @@ public class LogoutServletTest {
     public void testLogout() throws Exception {
         final String username = "username";
         final String password = "pwd";
+        final String email    = "some_email";
         final HttpSession session = mock(HttpSession.class);
 
         when(session.getId()).thenReturn("sessionid");
@@ -39,7 +40,7 @@ public class LogoutServletTest {
         HttpServletRequest request = getMockRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, email);
         mgr.authenticate(session.getId(), username, password);
 
         Integer beforeCount = mgr.getSessionCount();

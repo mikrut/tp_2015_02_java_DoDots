@@ -43,6 +43,7 @@ public class UserinfoServletTest {
         final StringWriter writer = new StringWriter();
         final String username = "username";
         final String password = "pwd";
+        String em = "email@mail";
         final HttpSession session = mock(HttpSession.class);
 
         HttpServletRequest request = getMockRequest();
@@ -53,7 +54,7 @@ public class UserinfoServletTest {
         when(request.getParameter("password")).thenReturn(password);
         when(request.getSession()).thenReturn(session);
 
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, em);
         mgr.authenticate(session.getId(), username, password);
 
         infoPage.doGet(request, response);

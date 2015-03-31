@@ -32,11 +32,13 @@ public class RegisterServlet extends HttpServlet {
 
         String username = request.getParameter("name");
         String password = request.getParameter("password");
+        String email    = request.getParameter("email");
+
 
         HttpSession session = request.getSession();
 
         try {
-            User user = manager.registerUser(username, password);
+            User user = manager.registerUser(username, password, email);
             manager.addSession(session.getId(), user);
             pageVariables.put("status", "OK");
             pageVariables.put("message", "Registration complete");

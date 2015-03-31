@@ -26,9 +26,10 @@ public class MapAccountManagerTest {
     public void testRegisterUser() throws Exception{
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         Integer counter = manager.getUserCount();
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             assertEquals("Expected to find more users than before registration", new Integer(counter+1), manager.getUserCount());
         } catch(Exception e) {
             assertTrue("Unexpected exception: " + e.getMessage(), false);
@@ -39,11 +40,12 @@ public class MapAccountManagerTest {
     public void doNotRegisterSimilar() {
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         Integer counter = manager.getUserCount();
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             try {
-                manager.registerUser(un, pw);
+                manager.registerUser(un, pw, em);
                 assertTrue("No exception? That's a pity... You should throw one", false);
             } catch (Exception e) {
                 assertEquals("Expected user already exists exception", "This username already exists", e.getMessage());
@@ -57,9 +59,10 @@ public class MapAccountManagerTest {
     public void testDeleteUser() {
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         Integer counter;
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             counter = manager.getUserCount();
             manager.deleteUser(un);
             assertEquals("Expected to get less users than before deletion", new Integer(counter - 1), manager.getUserCount());
@@ -72,8 +75,9 @@ public class MapAccountManagerTest {
     public void testAuthenticate() {
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             assertTrue("Expected authentication to be successful", manager.checkAuthable(un, pw)!=null);
             try {
                 manager.checkAuthable(un, "wrongpass");
@@ -99,10 +103,11 @@ public class MapAccountManagerTest {
         String sessionid = "session";
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         Integer numBefore;
         User usr;
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             usr = manager.checkAuthable(un, pw);
             numBefore = manager.getSessionCount();
             manager.addSession(sessionid, usr);
@@ -119,10 +124,11 @@ public class MapAccountManagerTest {
         String sessionid = "session";
         String un = "username";
         String pw = "password";
+        String em = "email@mail";
         Integer numBefore;
         User usr;
         try {
-            manager.registerUser(un, pw);
+            manager.registerUser(un, pw, em);
             manager.authenticate(sessionid, un, pw);
             numBefore = manager.getSessionCount();
             manager.logout(sessionid);

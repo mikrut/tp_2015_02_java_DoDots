@@ -107,11 +107,12 @@ public class AdminServletTest {
     public void testUserAndAdminOnServer() throws Exception {
         final String username = "pupkin";
         final String password = "you,shell,n0t_pass!!1";
+        String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
         when(userSession.getId()).thenReturn("user_dummysessionid");
 
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
 
         adminPage.doGet(request, response);
@@ -125,11 +126,12 @@ public class AdminServletTest {
     public void testUserLogout() throws Exception {
         final String username = "pupkin";
         final String password = "you,shell,n0t_pass!!1";
+        String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
         when(userSession.getId()).thenReturn("user_dummysessionid");
 
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
         mgr.logout(userSession.getId());
         adminPage.doGet(request, response);
@@ -150,10 +152,11 @@ public class AdminServletTest {
     public void testLowPrivilegeAccess() throws Exception {
         final String username = "pupkin";
         final String password = "you,shell,n0t_pass!!1";
+        String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
         when(userSession.getId()).thenReturn("user_dummysessionid");
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
         when(request.getSession()).thenReturn(userSession);
         adminPage.doGet(request, response);

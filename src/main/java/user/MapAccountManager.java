@@ -17,7 +17,7 @@ public class MapAccountManager implements AccountManager {
 
     public MapAccountManager() {
         try {
-            User admin = registerUser("admin", "admin");
+            User admin = registerUser("admin", "admin", "admin@localhost");
             admin.setStatus(User.Rights.ADMIN);
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,11 +44,14 @@ public class MapAccountManager implements AccountManager {
         return registeredList.getOrDefault(username, null);
     }
 
-    public User registerUser(String username, String password) throws Exception {
+    public User registerUser(String username, String password, String email) throws Exception {
         User usr;
 
+        if(username==null || password == null || email == null)
+            throw new Exception("Invalid parameters specified");
+
         if(!registeredList.containsKey(username)) {
-            usr = new User(username, password, userIdGenerator.getAndIncrement());
+            usr = new User(username, password, email, userIdGenerator.getAndIncrement());
 
             registeredList.put(username, usr);
             try {
@@ -77,9 +80,9 @@ public class MapAccountManager implements AccountManager {
     }
 
     public User checkAuthable(String username, String password) throws Exception {
-        User usr;
+        User usr = findUser(username);
 
-        if((usr=findUser(username)) != null){
+        if(usr != null){
             if(!usr.checkPassword(password)) {
                 throw new Exception("Incorrect password");
             }

@@ -43,11 +43,12 @@ public class LoginServletTest {
         final StringWriter writer = new StringWriter();
         final String username = "username";
         final String password = "pwd";
+        String em = "email@mail";
 
         HttpServletRequest request = getMockRequest();
         HttpServletResponse response = getMockResponse(writer);
 
-        mgr.registerUser(username, password);
+        mgr.registerUser(username, password, em);
 
         when(request.getParameter("name")).thenReturn(username);
         when(request.getParameter("password")).thenReturn(password);

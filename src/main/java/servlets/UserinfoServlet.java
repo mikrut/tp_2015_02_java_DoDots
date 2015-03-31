@@ -32,9 +32,11 @@ public class UserinfoServlet extends HttpServlet {
         if (usr != null) {
             pageVariables.put("loggedIn", true);
             pageVariables.put("username", usr.getUsername());
+            pageVariables.put("email",    usr.getEmail());
         } else {
             pageVariables.put("loggedIn", false);
             pageVariables.put("username", "Guest");
+            pageVariables.put("email",    "none");
         }
 
         tg.generate(response.getWriter(), "userinfo.json", pageVariables);

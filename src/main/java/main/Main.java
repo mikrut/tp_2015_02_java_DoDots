@@ -31,6 +31,7 @@ public class Main {
         Servlet logout = new LogoutServlet(mgr);
         Servlet userinfo = new UserinfoServlet(mgr);
         Servlet admin = new AdminServlet(server, mgr);
+        Servlet chat = new WebSocketChatServlet(mgr);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(register), "/signin");
@@ -38,6 +39,7 @@ public class Main {
         context.addServlet(new ServletHolder(logout), "/logout");
         context.addServlet(new ServletHolder(userinfo), "/getinfo");
         context.addServlet(new ServletHolder(admin), "/getadmin/*");
+        context.addServlet(new ServletHolder(chat), "/chat");
 
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);

@@ -10,18 +10,18 @@ import java.security.MessageDigest;
 
 public class User {
     public enum Rights {ADMIN, BASIC};
-    private String username;
-    private String passhash;
+    private String username, passhash, email;
     private Long userid;
     private Rights status;
 
-    public User(String username, String password, Long uid) {
-        this(username, password, uid, Rights.BASIC);
+    public User(String username, String password, String email, Long uid) {
+        this(username, password, email, uid, Rights.BASIC);
     }
 
-    public User(String username, String password, Long uid, Rights r) {
+    public User(String username, String password, String email, Long uid, Rights r) {
         this.username = username;
         this.passhash = makePassHash(password);
+        this.email = email;
         this.userid= uid;
         this.status = r;
     }
@@ -36,6 +36,10 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public Long getID(){
