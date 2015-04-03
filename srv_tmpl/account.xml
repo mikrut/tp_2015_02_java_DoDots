@@ -14,4 +14,8 @@
     We don't know user with such a username. Probably you would like to sign in?
   </userNotFound>
 
+  <authSuccess>
+    Login success
+  </authSuccess>
+
 </object>

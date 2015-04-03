@@ -1,5 +1,7 @@
 package user;
 
+import org.json.simple.JSONObject;
+
 import java.util.Map;
 
 /**
@@ -16,7 +18,7 @@ public interface AccountManager {
     public Integer getUserCount();
     public Integer getSessionCount();
 
-    public void authenticate(String sessionId, String username, String password) throws Exception;
+    public JSONObject authenticate(String sessionId, String username, String password);
     public User checkAuthable(String username, String password) throws Exception;
     public void addSession(String sessionId, User usr);
     public User getAuthenticated(String sessionId);

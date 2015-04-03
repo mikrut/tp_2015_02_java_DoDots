@@ -1,5 +1,6 @@
 package servlets;
 
+import org.json.simple.JSONObject;
 import user.AccountManager;
 import user.User;
 
@@ -31,15 +32,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("name");
         String password = request.getParameter("password");
 
-        try {
-            manager.authenticate(session.getId(), username, password);
-            pageVariables.put("status", "OK");
-            pageVariables.put("message", "Login success");
-        } catch (Exception e) {
-            pageVariables.put("status", "Error");
-            pageVariables.put("message", e.getMessage());
-        }
-
-        tg.generate(response.getWriter(), "login.json", pageVariables);
+        JSONObject result = manager.authenticate(session.getId(), username, password);
+        response.getWriter().write(result.toJSONString());
     }
 }

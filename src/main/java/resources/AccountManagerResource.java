@@ -13,10 +13,15 @@ public class AccountManagerResource implements Resource {
     private String userAlreadyExists;
     private String incorrectPassword;
     private String userNotFound;
-
+    private String authSuccess;
 
     public AccountManagerResource() {
 
+    }
+
+
+    public String getAuthSuccess() {
+        return authSuccess;
     }
 
     public String getAdminName() {

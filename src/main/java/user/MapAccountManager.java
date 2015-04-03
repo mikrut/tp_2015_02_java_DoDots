@@ -4,6 +4,7 @@ package user;
  * Created by Михаил on 01.03.2015.
  */
 
+import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 
@@ -82,8 +83,24 @@ public class MapAccountManager implements AccountManager {
         }
     }
 
-    public void authenticate(String sessionId, String username, String password) throws Exception {
-        addSession(sessionId, checkAuthable(username, password));
+    public JSONObject authenticate(String sessionId, String username, String password) {
+        User usr = findUser(username);
+        JSONObject response = new JSONObject();
+
+        if(usr != null){
+            if(!usr.checkPassword(password)) {
+                response.put("status", "Error");
+                response.put("message", resource.getIncorrectPassword());
+            } else {
+                response.put("status", "OK");
+                response.put("message", resource.getAuthSuccess());
+            }
+        } else {
+            response.put("status", "Error");
+            response.put("message", resource.getUserNotFound());
+            addSession(sessionId, usr);
+        }
+        return response;
     }
 
     public User checkAuthable(String username, String password) throws Exception {
