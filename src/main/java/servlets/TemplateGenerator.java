@@ -14,13 +14,12 @@ import java.util.Map;
 /**
  * Created by Михаил on 01.03.2015.
  */
-public class TemplateGenerator {
+class TemplateGenerator {
     private static final String TEMPL_DIR = "./srv_tmpl";
     private static Configuration CFG;
 
     public TemplateGenerator() {
         CFG = new Configuration();
-        TemplateLoader[] loaders = null;
 
         try {
             CFG.setTemplateLoader(new FileTemplateLoader(new File(TEMPL_DIR)));

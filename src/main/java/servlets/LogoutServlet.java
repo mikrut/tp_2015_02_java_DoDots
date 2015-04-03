@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class LogoutServlet extends HttpServlet {
-    private AccountManager manager;
+    private final AccountManager manager;
     public LogoutServlet(AccountManager mgr) {
         manager = mgr;
     }

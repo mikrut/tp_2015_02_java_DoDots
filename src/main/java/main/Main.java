@@ -16,7 +16,7 @@ import user.MapAccountManager;
 
 import javax.servlet.Servlet;
 
-public class Main {
+class Main {
     public static void main(String[] args) throws Exception {
         int port = 8080;
         if(args.length > 0) {

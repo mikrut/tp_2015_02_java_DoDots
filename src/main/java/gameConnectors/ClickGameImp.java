@@ -8,8 +8,9 @@ import org.json.simple.JSONValue;
  * Created by mihanik on 31.03.15.
  */
 public class ClickGameImp implements  Game{
-    private Board board = new Board(5,5);
-    private MyWebSocket sock1, sock2;
+    private final Board board = new Board(5,5);
+    private final MyWebSocket sock1;
+    private final MyWebSocket sock2;
 
     public ClickGameImp(MyWebSocket sock1, MyWebSocket sock2) {
         this.sock1 = sock1;
@@ -60,5 +61,6 @@ public class ClickGameImp implements  Game{
         JSONObject obj = new JSONObject();
         obj.put("status", "Close");
         obj.put("message", "Connection closed");
+        sockFrom.sendMessage(obj.toJSONString());
     }
 }

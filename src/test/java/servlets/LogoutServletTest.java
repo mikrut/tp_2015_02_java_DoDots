@@ -17,8 +17,8 @@ import static org.mockito.Mockito.atLeastOnce;
 
 public class LogoutServletTest {
     final private static String url = "/logout";
-    private static AccountManager mgr = new MapAccountManager();
-    private LogoutServlet logoutPage = new LogoutServlet(mgr);
+    private static final AccountManager mgr = new MapAccountManager();
+    private final LogoutServlet logoutPage = new LogoutServlet(mgr);
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -47,7 +47,7 @@ public class LogoutServletTest {
         when(request.getSession()).thenReturn(session);
 
         logoutPage.doPost(request, response);
-        Assert.assertEquals("Expected less sessions than before logout", new Integer(beforeCount-1), mgr.getSessionCount());
+        assertEquals("Expected less sessions than before logout", new Integer(beforeCount-1), mgr.getSessionCount());
         verify(response, atLeastOnce()).sendRedirect("/");
 
         when(session.getId()).thenReturn("sessionid_wrong");

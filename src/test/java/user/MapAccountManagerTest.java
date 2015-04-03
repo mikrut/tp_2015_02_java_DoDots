@@ -1,6 +1,5 @@
 package user;
 
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +40,6 @@ public class MapAccountManagerTest {
         String un = "username";
         String pw = "password";
         String em = "email@mail";
-        Integer counter = manager.getUserCount();
         try {
             manager.registerUser(un, pw, em);
             try {
@@ -126,7 +124,6 @@ public class MapAccountManagerTest {
         String pw = "password";
         String em = "email@mail";
         Integer numBefore;
-        User usr;
         try {
             manager.registerUser(un, pw, em);
             manager.authenticate(sessionid, un, pw);

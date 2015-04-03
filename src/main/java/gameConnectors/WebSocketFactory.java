@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by mihanik on 31.03.15.
  */
 public class WebSocketFactory implements WebSocketCreator {
-    private AccountManager manager;
-    private GameProvider prov;
+    private final AccountManager manager;
+    private final GameProvider prov;
 
     public WebSocketFactory(AccountManager manager) {
         prov = new FastGameProviderImp();

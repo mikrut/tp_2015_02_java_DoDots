@@ -4,20 +4,27 @@ package user;
  * Created by Михаил on 01.03.2015.
  */
 
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MapAccountManager implements AccountManager {
-    private Map<String, User> registeredList = new HashMap<>();
-    private Map<String, User> loggedInList = new HashMap<>();
-    private AtomicLong userIdGenerator = new AtomicLong();
+    private final Map<String, User> registeredList = new HashMap<>();
+    private final Map<String, User> loggedInList = new HashMap<>();
+    private final AtomicLong userIdGenerator = new AtomicLong();
+    private AccountManagerResource resource = null;
 
-    private static AccountManager singleton_manager = new MapAccountManager();
+    private static final AccountManager singleton_manager = new MapAccountManager();
 
     public MapAccountManager() {
+        resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
         try {
-            User admin = registerUser("admin", "admin", "admin@localhost");
+            User admin = registerUser(resource.getAdminName(),
+                                      resource.getAdminPassword(),
+                                      resource.getAdminEmail());
             admin.setStatus(User.Rights.ADMIN);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +55,7 @@ public class MapAccountManager implements AccountManager {
         User usr;
 
         if(username==null || password == null || email == null)
-            throw new Exception("Invalid parameters specified");
+            throw new Exception(resource.getNullQueryAnswer());
 
         if(!registeredList.containsKey(username)) {
             usr = new User(username, password, email, userIdGenerator.getAndIncrement());
@@ -60,7 +67,7 @@ public class MapAccountManager implements AccountManager {
                 e.printStackTrace();
             }
         } else {
-            throw new Exception("This username already exists");
+            throw new Exception(resource.getUserAlreadyExists());
         }
         return usr;
     }
@@ -84,10 +91,10 @@ public class MapAccountManager implements AccountManager {
 
         if(usr != null){
             if(!usr.checkPassword(password)) {
-                throw new Exception("Incorrect password");
+                throw new Exception(resource.getIncorrectPassword());
             }
         } else {
-            throw new Exception("User not found");
+            throw new Exception(resource.getUserNotFound());
         }
         return usr;
     }

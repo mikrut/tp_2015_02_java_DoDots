@@ -19,8 +19,8 @@ import static org.mockito.Mockito.when;
 
 public class RegisterServletTest {
     final private static String url = "/signin";
-    private static AccountManager mgr = new MapAccountManager();
-    private RegisterServlet registerPage = new RegisterServlet(mgr);
+    private static final AccountManager mgr = new MapAccountManager();
+    private final RegisterServlet registerPage = new RegisterServlet(mgr);
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);

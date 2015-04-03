@@ -20,8 +20,8 @@ import org.json.simple.JSONValue;
 
 public class LoginServletTest {
     final private static String url = "/login";
-    private static AccountManager mgr = new MapAccountManager();
-    private LoginServlet loginPage = new LoginServlet(mgr);
+    private static final AccountManager mgr = new MapAccountManager();
+    private final LoginServlet loginPage = new LoginServlet(mgr);
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);

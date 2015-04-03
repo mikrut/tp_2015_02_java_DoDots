@@ -15,8 +15,8 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class UserinfoServlet extends HttpServlet {
-    private AccountManager manager;
-    private TemplateGenerator tg = new TemplateGenerator();
+    private final AccountManager manager;
+    private final TemplateGenerator tg = new TemplateGenerator();
 
     public UserinfoServlet(AccountManager mgr) {
         manager = mgr;

@@ -3,9 +3,10 @@ package user;
 import java.util.Map;
 
 /**
- * Created by Михаил on 01.03.2015.
+ * Created by Михаил
+ * 01.03.2015 0:21
+ * Package: ${PACKAGE_NAME}
  */
-
 public interface AccountManager {
     public User findUser(String username);
     public User registerUser(String username, String password, String email) throws Exception;

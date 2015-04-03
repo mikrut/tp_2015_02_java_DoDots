@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterServlet extends HttpServlet {
-    private AccountManager manager;
+    private final AccountManager manager;
 
-    private TemplateGenerator tg = new TemplateGenerator();
+    private final TemplateGenerator tg = new TemplateGenerator();
 
     public RegisterServlet(AccountManager mgr) {
         manager = mgr;

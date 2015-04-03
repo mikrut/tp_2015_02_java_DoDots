@@ -15,8 +15,8 @@ import java.util.Map;
  * Created by Михаил on 01.03.2015.
  */
 public class LoginServlet extends HttpServlet {
-    private TemplateGenerator tg = new TemplateGenerator();
-    private AccountManager manager;
+    private final TemplateGenerator tg = new TemplateGenerator();
+    private final AccountManager manager;
 
     public LoginServlet(AccountManager mgr) {
         manager = mgr;
@@ -30,7 +30,6 @@ public class LoginServlet extends HttpServlet {
 
         String username = request.getParameter("name");
         String password = request.getParameter("password");
-        User usr = null;
 
         try {
             manager.authenticate(session.getId(), username, password);

@@ -1,6 +1,5 @@
 package servlets;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.junit.Test;
@@ -20,8 +19,8 @@ import static org.mockito.Mockito.when;
 
 public class UserinfoServletTest {
     final private static String url = "/getinfo";
-    private static AccountManager mgr = new MapAccountManager();
-    private UserinfoServlet infoPage = new UserinfoServlet(mgr);
+    private static final AccountManager mgr = new MapAccountManager();
+    private final UserinfoServlet infoPage = new UserinfoServlet(mgr);
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);

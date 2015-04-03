@@ -1,7 +1,6 @@
 package game;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import user.User;
 
 /**
@@ -9,7 +8,8 @@ import user.User;
  */
 public class Board {
     private Cell cells[][] = null;
-    private Integer rowSize, colSize;
+    private final Integer rowSize;
+    private final Integer colSize;
 
     public Board(Integer rows, Integer cols) {
         rowSize = rows;

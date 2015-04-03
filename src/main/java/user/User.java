@@ -4,14 +4,15 @@ package user;
  * Created by Михаил on 01.03.2015.
  */
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-import sun.plugin2.message.Message;
 
 import java.security.MessageDigest;
 
 public class User {
-    public enum Rights {ADMIN, BASIC};
-    private String username, passhash, email;
-    private Long userid;
+    public enum Rights {ADMIN, BASIC}
+    private final String username;
+    private final String passhash;
+    private final String email;
+    private final Long userid;
     private Rights status;
 
     public User(String username, String password, String email, Long uid) {
@@ -50,7 +51,7 @@ public class User {
         return passhash.equals(makePassHash(password));
     }
 
-    public static String makePassHash(String password) {
+    private static String makePassHash(String password) {
         String result;
 
         try {

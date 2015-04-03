@@ -16,9 +16,9 @@ import java.util.Map;
  * Created by mihanik on 04.03.15.
  */
 public class AdminServlet extends HttpServlet {
-    private TemplateGenerator tg = new TemplateGenerator();
-    private Server server;
-    private AccountManager manager;
+    private final TemplateGenerator tg = new TemplateGenerator();
+    private final Server server;
+    private final AccountManager manager;
 
     public AdminServlet(Server server, AccountManager mgr){
         this.server = server;

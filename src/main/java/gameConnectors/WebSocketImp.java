@@ -16,7 +16,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 
 @WebSocket
 public class WebSocketImp implements MyWebSocket {
-    private User client;
+    private final User client;
     private Session session;
     private Game game;
 
@@ -47,7 +47,7 @@ public class WebSocketImp implements MyWebSocket {
         setSession(session);
     }
 
-    public void setSession(Session session) {
+    void setSession(Session session) {
         this.session = session;
     }
 

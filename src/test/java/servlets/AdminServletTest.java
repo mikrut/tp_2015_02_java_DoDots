@@ -28,16 +28,16 @@ import static org.mockito.Mockito.verify;
 
 public class AdminServletTest {
     final private static String url = "/admin";
-    final String adminUsername = "admin";
-    final String adminPassword = "admin";
+    final private String adminUsername = "admin";
+    final private String adminPassword = "admin";
 
-    private static AccountManager mgr = new MapAccountManager();
+    private static final AccountManager mgr = new MapAccountManager();
     final private static Server server = mock(Server.class);
-    private AdminServlet adminPage = new AdminServlet(server, mgr);
+    private final AdminServlet adminPage = new AdminServlet(server, mgr);
 
     final StringWriter writer = new StringWriter();
     final HttpSession session = mock(HttpSession.class);
-    HttpServletRequest request = getMockRequest();
+    final HttpServletRequest request = getMockRequest();
     HttpServletResponse response;
 
     HttpServletRequest getMockRequest() {
