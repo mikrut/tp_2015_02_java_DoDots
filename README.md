@@ -15,6 +15,7 @@
 # API
 
 API can be easily customised just by changing XML config files in srv_tmpl directory.
+Exempli gratia, basic responses can be edited in response_resource.xml file.
 
 ## Login
 
