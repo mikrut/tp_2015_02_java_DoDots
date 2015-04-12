@@ -11,7 +11,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by mihanik on 31.03.15.
+ * Created by mihanik
+ * 31.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
 public class WebSocketFactory implements WebSocketCreator {
     private final AccountManager manager;
@@ -27,8 +29,12 @@ public class WebSocketFactory implements WebSocketCreator {
         User usr = null;
         if((request != null) && request.getSession()!=null)
             usr = manager.getAuthenticated(request.getSession().getId());
-        MyWebSocket sock = new WebSocketImp(usr);
-        prov.addWebSocket(sock);
-        return sock;
+        if (usr != null) {
+            MyWebSocket sock = new WebSocketImp(usr);
+            sock.setProvider(prov);
+            return sock;
+        } else {
+            return null;
+        }
     }
 }

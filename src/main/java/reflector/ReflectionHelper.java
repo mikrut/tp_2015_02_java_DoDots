@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * 04.04.15 0:48
  * Package: reflector
  */
-public class ReflectionHelper {
+class ReflectionHelper {
     public static Object generateObject(String className) {
         Object obj = null;
         try {
@@ -18,6 +18,7 @@ public class ReflectionHelper {
         return obj;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static Object setObjectField(Object obj, String fieldName, String value) {
         try {
             Field field = obj.getClass().getDeclaredField(fieldName);
@@ -25,7 +26,7 @@ public class ReflectionHelper {
 
             if (field.getType().equals(String.class)) {
                 field.set(obj, value);
-            } else if (field.getType().equals(int.class)) {
+            } else if (field.getType().equals(Integer.class)) {
                 field.set(obj, Integer.decode(value));
             }
 

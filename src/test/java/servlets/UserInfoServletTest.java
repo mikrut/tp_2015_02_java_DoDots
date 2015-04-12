@@ -17,10 +17,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserinfoServletTest {
+public class UserInfoServletTest {
     final private static String url = "/getinfo";
     private static final AccountManager mgr = new MapAccountManager();
-    private final UserinfoServlet infoPage = new UserinfoServlet(mgr);
+    private final UserInfoServlet infoPage = new UserInfoServlet(mgr);
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -79,7 +79,7 @@ public class UserinfoServletTest {
                 assertTrue("Expected response to contain loggedIn string. Got only: "+response, obj.containsKey("loggedIn"));
             }
         } else {
-            assertTrue("Expected response to be valid. But got: "+response, obj != null);
+            assertTrue("Expected response to be valid. But got: "+response, false);
         }
     }
 }

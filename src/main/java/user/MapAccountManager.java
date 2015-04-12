@@ -1,12 +1,14 @@
 package user;
 
 /**
- * Created by Михаил on 01.03.2015.
+ * Created by Михаил
+ * 01.03.2015 9:15
+ * Package: ${PACKAGE_NAME}
  */
-
 import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
+import resources.ResponseResource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +19,13 @@ public class MapAccountManager implements AccountManager {
     private final Map<String, User> loggedInList = new HashMap<>();
     private final AtomicLong userIdGenerator = new AtomicLong();
     private AccountManagerResource resource = null;
+    private ResponseResource responseResource = null;
 
     private static final AccountManager singleton_manager = new MapAccountManager();
 
     public MapAccountManager() {
         resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
+        responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
         try {
             User admin = registerUser(resource.getAdminName(),
                                       resource.getAdminPassword(),
@@ -48,7 +52,7 @@ public class MapAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
-    public User findUser(String username) {
+    User findUser(String username) {
         return registeredList.getOrDefault(username, null);
     }
 
@@ -83,22 +87,23 @@ public class MapAccountManager implements AccountManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject authenticate(String sessionId, String username, String password) {
         User usr = findUser(username);
         JSONObject response = new JSONObject();
 
         if(usr != null){
             if(!usr.checkPassword(password)) {
-                response.put("status", "Error");
-                response.put("message", resource.getIncorrectPassword());
+                response.put(responseResource.getStatus(), responseResource.getError());
+                response.put(responseResource.getMessage(), resource.getIncorrectPassword());
             } else {
-                response.put("status", "OK");
-                response.put("message", resource.getAuthSuccess());
+                response.put(responseResource.getStatus(), responseResource.getOk());
+                response.put(responseResource.getMessage(), resource.getAuthSuccess());
+                addSession(sessionId, usr);
             }
         } else {
-            response.put("status", "Error");
-            response.put("message", resource.getUserNotFound());
-            addSession(sessionId, usr);
+            response.put(responseResource.getStatus(), responseResource.getError());
+            response.put(responseResource.getMessage(), resource.getUserNotFound());
         }
         return response;
     }

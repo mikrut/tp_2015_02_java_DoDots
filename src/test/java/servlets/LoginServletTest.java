@@ -87,7 +87,7 @@ public class LoginServletTest {
                 assertTrue("Expected response to contain message string. Got only: "+response, obj.containsKey("message"));
             }
         } else {
-            assertTrue("Expected response to be valid. But got: "+response, obj != null);
+            assertTrue("Expected response to be valid. But got: "+response, false);
         }
     }
 }

@@ -1,8 +1,10 @@
 package gameConnectors;
 
 /**
- * Created by mihanik on 31.03.15.
+ * Created by mihanik
+ * 31.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
-public interface GameProvider {
+interface GameProvider {
     public void addWebSocket(MyWebSocket sock);
 }

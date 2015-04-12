@@ -12,13 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Михаил on 01.03.2015.
+ * Created by Михаил
+ * 01.03.2015 9:15
+ * Package: ${PACKAGE_NAME}
  */
-public class UserinfoServlet extends HttpServlet {
+public class UserInfoServlet extends HttpServlet {
     private final AccountManager manager;
     private final TemplateGenerator tg = new TemplateGenerator();
 
-    public UserinfoServlet(AccountManager mgr) {
+    public UserInfoServlet(AccountManager mgr) {
         manager = mgr;
     }
 

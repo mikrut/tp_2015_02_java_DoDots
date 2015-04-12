@@ -1,20 +1,32 @@
 package gameConnectors;
 
+import org.json.simple.JSONObject;
+import resources.GameProviderResource;
+import resources.ResourceProvider;
+
 /**
- * Created by mihanik on 31.03.15.
+ * Created by mihanik
+ * 31.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
 public class FastGameProviderImp implements GameProvider {
     private MyWebSocket  socket = null;
+    private GameProviderResource setup = (GameProviderResource) ResourceProvider.getProvider().getResource("gameprovider.xml");
 
     @Override
     public void addWebSocket(MyWebSocket sock) {
+        JSONObject response = new JSONObject();
         if (socket == null) {
             socket = sock;
-            System.out.println("Added sock");
-            sock.sendMessage("I see you!");
+            response.put("Status", setup.getConnectSuccessStatus());
+            response.put("Message", setup.getConnectSuccessMessage());
+            sock.sendMessage(response.toJSONString());
         } else {
-            System.out.println("new game");
-            new ClickGameImp(socket, sock);//new ChatGameImp(socket, sock);
+            response.put("Status", setup.getConnectSuccessStatus());
+            response.put("Message", setup.getConnectSuccessMessage());
+            sock.sendMessage(response.toJSONString());
+            response.clear();
+            new ClickGameImp(socket, sock);
             socket = null;
         }
     }

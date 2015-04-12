@@ -1,7 +1,9 @@
 package gameConnectors;
 
 /**
- * Created by mihanik on 31.03.15.
+ * Created by mihanik
+ * 31.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
 public class ChatGameImp implements Game {
     private MyWebSocket sock1, sock2;

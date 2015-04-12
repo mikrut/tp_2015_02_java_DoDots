@@ -11,14 +11,16 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 
 /**
- * Created by mihanik on 31.03.15.
+ * Created by mihanik
+ * 31.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
-
 @WebSocket
 public class WebSocketImp implements MyWebSocket {
     private final User client;
     private Session session;
     private Game game;
+    private GameProvider provider;
 
     public WebSocketImp(User client) {
         this.client = client;
@@ -45,6 +47,7 @@ public class WebSocketImp implements MyWebSocket {
     @OnWebSocketConnect
     public void onOpen(Session session) {
         setSession(session);
+        provider.addWebSocket(this);
     }
 
     void setSession(Session session) {
@@ -66,6 +69,11 @@ public class WebSocketImp implements MyWebSocket {
         this.game = game;
         if(client == null && session != null)
             session.close();
+    }
+
+    @Override
+    public void setProvider(GameProvider provider) {
+        this.provider = provider;
     }
 
     @Override

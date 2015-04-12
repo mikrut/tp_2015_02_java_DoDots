@@ -5,6 +5,7 @@ package resources;
  * 04.04.15 0:45
  * Package: resources
  */
+@SuppressWarnings("UnusedDeclaration")
 public class AccountManagerResource implements Resource {
     private String adminName;
     private String adminPassword;

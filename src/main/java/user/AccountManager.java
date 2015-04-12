@@ -10,7 +10,6 @@ import java.util.Map;
  * Package: ${PACKAGE_NAME}
  */
 public interface AccountManager {
-    public User findUser(String username);
     public User registerUser(String username, String password, String email) throws Exception;
     public Map<String, User> getAllRegistered();
     public void deleteUser(String username);

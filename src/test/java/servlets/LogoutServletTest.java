@@ -35,7 +35,7 @@ public class LogoutServletTest {
         final String email    = "some_email";
         final HttpSession session = mock(HttpSession.class);
 
-        when(session.getId()).thenReturn("sessionid");
+        when(session.getId()).thenReturn("sessionId");
 
         HttpServletRequest request = getMockRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -50,7 +50,7 @@ public class LogoutServletTest {
         assertEquals("Expected less sessions than before logout", new Integer(beforeCount-1), mgr.getSessionCount());
         verify(response, atLeastOnce()).sendRedirect("/");
 
-        when(session.getId()).thenReturn("sessionid_wrong");
+        when(session.getId()).thenReturn("sessionId_wrong");
         beforeCount = mgr.getSessionCount();
         logoutPage.doPost(request, response);
         assertEquals("Expected as much sessions as before logout", beforeCount, mgr.getSessionCount());

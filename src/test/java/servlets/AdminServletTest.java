@@ -29,16 +29,15 @@ import static org.mockito.Mockito.verify;
 public class AdminServletTest {
     final private static String url = "/admin";
     final private String adminUsername = "admin";
-    final private String adminPassword = "admin";
 
     private static final AccountManager mgr = new MapAccountManager();
     final private static Server server = mock(Server.class);
     private final AdminServlet adminPage = new AdminServlet(server, mgr);
 
-    final StringWriter writer = new StringWriter();
-    final HttpSession session = mock(HttpSession.class);
-    final HttpServletRequest request = getMockRequest();
-    HttpServletResponse response;
+    private final StringWriter writer = new StringWriter();
+    private final HttpSession session = mock(HttpSession.class);
+    private final HttpServletRequest request = getMockRequest();
+    private HttpServletResponse response;
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -60,7 +59,8 @@ public class AdminServletTest {
         response = getMockResponse(writer);
         writer.getBuffer().setLength(0);
 
-        when(session.getId()).thenReturn("dummysessionid");
+        when(session.getId()).thenReturn("dummySessionId");
+        String adminPassword = "admin";
         mgr.authenticate(session.getId(), adminUsername, adminPassword);
         when(request.getSession()).thenReturn(session);
     }
@@ -105,12 +105,12 @@ public class AdminServletTest {
 
     @Test
     public void testUserAndAdminOnServer() throws Exception {
-        final String username = "pupkin";
+        final String username = "MrPupkin";
         final String password = "you,shell,n0t_pass!!1";
         String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
-        when(userSession.getId()).thenReturn("user_dummysessionid");
+        when(userSession.getId()).thenReturn("user_dummySessionId");
 
         mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
@@ -124,12 +124,12 @@ public class AdminServletTest {
 
     @Test
     public void testUserLogout() throws Exception {
-        final String username = "pupkin";
+        final String username = "MrPupkin";
         final String password = "you,shell,n0t_pass!!1";
         String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
-        when(userSession.getId()).thenReturn("user_dummysessionid");
+        when(userSession.getId()).thenReturn("user_dummySessionId");
 
         mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
@@ -143,19 +143,19 @@ public class AdminServletTest {
 
     @Test
     public void testUnauthorisedAccess() throws Exception {
-        when(session.getId()).thenReturn("wrong_dummysessionid");
+        when(session.getId()).thenReturn("wrong_dummySessionId");
         adminPage.doGet(request, response);
         verify(response, atLeastOnce()).setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
     @Test
     public void testLowPrivilegeAccess() throws Exception {
-        final String username = "pupkin";
+        final String username = "MrPupkin";
         final String password = "you,shell,n0t_pass!!1";
         String em = "email@mail";
 
         final HttpSession userSession = mock(HttpSession.class);
-        when(userSession.getId()).thenReturn("user_dummysessionid");
+        when(userSession.getId()).thenReturn("user_dummySessionId");
         mgr.registerUser(username, password, em);
         mgr.authenticate(userSession.getId(), username, password);
         when(request.getSession()).thenReturn(userSession);

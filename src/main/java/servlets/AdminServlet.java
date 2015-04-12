@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by mihanik on 04.03.15.
+ * Created by mihanik
+ * 04.03.15 9:15
+ * Package: ${PACKAGE_NAME}
  */
 public class AdminServlet extends HttpServlet {
     private final TemplateGenerator tg = new TemplateGenerator();

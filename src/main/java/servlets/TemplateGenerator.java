@@ -12,7 +12,9 @@ import java.io.Writer;
 import java.util.Map;
 
 /**
- * Created by Михаил on 01.03.2015.
+ * Created by Михаил
+ * 01.03.2015 9:15
+ * Package: ${PACKAGE_NAME}
  */
 class TemplateGenerator {
     private static final String TEMPL_DIR = "./srv_tmpl";

@@ -47,15 +47,17 @@ public class ModifiedProvider extends ResourceProvider {
     private void initialise() {
         File folder = new File(dir);
         if(folder.exists() && folder.isDirectory()) {
-            for(File file : folder.listFiles()) {
-                String filename = file.getAbsolutePath();
-                String extension = "";
-                int i = filename.lastIndexOf('.');
-                if (i > 0) {
-                    extension = filename.substring(i+1);
-                }
-                if(!file.isDirectory() && extension.equals("xml")) {
-                    tryGetResource(file.getName());
+            if(folder.listFiles() != null) {
+                for (File file : folder.listFiles()) {
+                    String filename = file.getAbsolutePath();
+                    String extension = "";
+                    int i = filename.lastIndexOf('.');
+                    if (i > 0) {
+                        extension = filename.substring(i + 1);
+                    }
+                    if (!file.isDirectory() && extension.equals("xml")) {
+                        tryGetResource(file.getName());
+                    }
                 }
             }
         }

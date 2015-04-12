@@ -1,5 +1,7 @@
 /**
- * Created by Михаил on 28.02.2015.
+ * Created by Михаил
+ * 28.02.2015 9:15
+ * Package: ${PACKAGE_NAME}
  */
 package main;
 
@@ -29,7 +31,7 @@ class Main {
         Servlet register = new RegisterServlet(mgr);
         Servlet login = new LoginServlet(mgr);
         Servlet logout = new LogoutServlet(mgr);
-        Servlet userinfo = new UserinfoServlet(mgr);
+        Servlet userInfo = new UserInfoServlet(mgr);
         Servlet admin = new AdminServlet(server, mgr);
         Servlet chat = new WebSocketChatServlet(mgr);
 
@@ -37,7 +39,7 @@ class Main {
         context.addServlet(new ServletHolder(register), "/signin");
         context.addServlet(new ServletHolder(login), "/login");
         context.addServlet(new ServletHolder(logout), "/logout");
-        context.addServlet(new ServletHolder(userinfo), "/getinfo");
+        context.addServlet(new ServletHolder(userInfo), "/getinfo");
         context.addServlet(new ServletHolder(admin), "/getadmin/*");
         context.addServlet(new ServletHolder(chat), "/chat");
 

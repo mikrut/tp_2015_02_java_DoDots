@@ -1,9 +1,10 @@
 package servlets;
 
 /**
- * Created by Михаил on 01.03.2015.
+ * Created by Михаил
+ * 01.03.2015 9:15
+ * Package: ${PACKAGE_NAME}
  */
-
 import java.io.IOException;
 
 import user.AccountManager;
