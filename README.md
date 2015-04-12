@@ -155,7 +155,7 @@ Nota bene: user should be authorized, user can play with himself if he uses diff
   "message":"Data accepted."/"Invalid data.",
   "board":[
     [0,0,0,0,0],
-    [0,0,1,0,0],
+    [0,0,1,0,0], // 0 - free, 1 - first player, 2 - second player
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0]
