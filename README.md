@@ -14,6 +14,8 @@
 
 # API
 
+API can be easily customised just by changing XML config files in srv_tmpl directory.
+
 ## Login
 
 **Request**
@@ -109,27 +111,56 @@ _for admin only_
 
 ## Game
 
-**Request**
-* Method: WebSocket
 * Type: JSON
+* Method: WebSocket
 * URL: /chat
 
+### Connection established event
+
+Nota bene: user should be authorized, user can play with himself if he uses different sessions
+
+**Response**
+```
+{
+  "Status":"Connected",
+  "Message":"Connection successfull. Waiting for another player."
+}
+```
+### Game start event
+
+**Response**
+```
+{
+  "is_first":true/false,
+  "message":"Let the game start!",
+  "status":"Game start"
+}
+```
+
+### Capture
+
+**Request**
 ```
 {
   "row":"1",
   "col":"2"
 }
 ```
-
 **Response**
-* Type: JSON
 ```
 {
-  "message":"Data accepted",
-  "board":[[0,0,0,0,0],
-           [0,0,1,0,0],
-           [0,0,0,0,0],
-           [0,0,0,0,0],
-           [0,0,0,0,0]],
-  "status":"Error/OK"}
+  "col":"2",
+  "row":"1",
+  "message":"Data accepted."/"Invalid data.",
+  "board":[
+    [0,0,0,0,0],
+    [0,0,1,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0]
+  ],
+  "status":"OK"/"Error",
+  "who_moves":1 // Index of player having next step right: 0 - first, 1 - second
+}
 ```
+
