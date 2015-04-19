@@ -12,9 +12,15 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import servlets.*;
 import user.AccountManager;
+import user.DAOAccountManager;
 import user.MapAccountManager;
+import user.User;
 
 import javax.servlet.Servlet;
 
@@ -26,7 +32,7 @@ class Main {
         }
 
         Server server = new Server(port);
-        AccountManager mgr = MapAccountManager.getManager();
+        AccountManager mgr = new DAOAccountManager(getFactory());
 
         Servlet register = new RegisterServlet(mgr);
         Servlet login = new LoginServlet(mgr);
@@ -55,5 +61,25 @@ class Main {
 
         server.start();
         server.join();
+    }
+
+    private static org.hibernate.SessionFactory getFactory() {
+        Configuration configuration = new Configuration();
+        configuration.addAnnotatedClass(User.class);
+
+        configuration.setProperty("hibernate.dialect",                 "org.hibernate.dialect.MySQLDialect");
+        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+        configuration.setProperty("hibernate.connection.url",          "jdbc:mysql://localhost:3306/tp_dodots_production");
+        configuration.setProperty("hibernate.connection.username",     "root");
+        configuration.setProperty("hibernate.connection.password",     "0000");
+        configuration.setProperty("hibernate.show_sql",                "true");
+        configuration.setProperty("hibernate.hbm2ddl.auto",            "update");
+        configuration.setProperty("hibernate.flushMode",               "COMMIT");
+
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+        builder.applySettings(configuration.getProperties());
+        ServiceRegistry registry = builder.build();
+
+        return configuration.buildSessionFactory(registry);
     }
 }

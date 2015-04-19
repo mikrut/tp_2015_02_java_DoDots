@@ -7,26 +7,66 @@ package user;
  */
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.security.MessageDigest;
 
-public class User {
+@Entity
+@Table(name="users")
+public class User implements Serializable {
     public enum Rights {ADMIN, BASIC}
-    private final String username;
-    private final String passHash;
-    private final String email;
-    private final Long userId;
+
+    @Id
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long userId;
+
+    @Column(unique=true)
+    private String username;
+    @Column(name="password")
+    private String passHash;
+    @Column
+    private String email;
+    @Column
     private Rights status;
+
+    public User() {
+    }
+
+    public User(User usr) {
+        this(usr.getUsername(), "something", usr.getEmail(), usr.getID(), usr.getStatus());
+        passHash = new String(usr.passHash);
+    }
 
     public User(String username, String password, String email, Long uid) {
         this(username, password, email, uid, Rights.BASIC);
     }
 
     private User(String username, String password, String email, Long uid, Rights r) {
-        this.username = username;
-        this.passHash = makePassHash(password);
-        this.email = email;
-        this.userId = uid;
-        this.status = r;
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setEmail(email);
+        this.setUserId(uid);
+        this.setStatus(r);
+    }
+
+    public void setUsername(String username) {
+        this.username = new String(username);
+    }
+
+    public void setPassword(String password) {
+        passHash = makePassHash(password);
+    }
+
+    public void setEmail(String email) {
+        this.email = new String(email);
+    }
+
+    public void setUserId(Long uid) {
+        if(uid != null)
+            userId = new Long(uid);
+        else
+            userId = null;
     }
 
     public void setStatus(Rights s) {
@@ -38,15 +78,15 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return new String(username);
     }
 
     public String getEmail() {
-        return email;
+        return new String(email);
     }
 
     public Long getID(){
-        return userId;
+        return new Long(userId);
     }
 
     public Boolean checkPassword(String password) {

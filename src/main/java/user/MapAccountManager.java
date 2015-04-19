@@ -53,7 +53,7 @@ public class MapAccountManager implements AccountManager {
     }
 
     User findUser(String username) {
-        return registeredList.getOrDefault(username, null);
+        return new User(registeredList.getOrDefault(username, null));
     }
 
     public User registerUser(String username, String password, String email) throws Exception {
