@@ -1,5 +1,5 @@
 {
 "loggedIn": ${loggedIn?c},
 "username"    : "${username}",
-"email"   : "${email}",
+"email"   : "${email}"
 }

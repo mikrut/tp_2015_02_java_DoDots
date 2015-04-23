@@ -41,12 +41,14 @@ public class RegisterServletTest {
     public void testRegistration() throws Exception{
         final StringWriter writer = new StringWriter();
         final String username = "username";
+        final String email = "e@mail.ru";
         final String password = "pwd";
 
         HttpServletRequest request = getMockRequest();
         HttpServletResponse response = getMockResponse(writer);
 
         when(request.getParameter("name")).thenReturn(username);
+        when(request.getParameter("email")).thenReturn(email);
         when(request.getParameter("password")).thenReturn(password);
 
         registerPage.doPost(request, response);

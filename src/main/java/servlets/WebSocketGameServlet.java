@@ -12,12 +12,12 @@ import javax.servlet.annotation.WebServlet;
  * 31.03.15 9:15
  * Package: ${PACKAGE_NAME}
  */
-@WebServlet(name = "WebSocketChatServlet", urlPatterns = {"/chat"})
-public class WebSocketChatServlet extends WebSocketServlet {
+@WebServlet(name = "WebSocketGameServlet", urlPatterns = {"/game"})
+public class WebSocketGameServlet extends WebSocketServlet {
     private final static int LOGOUT_TIME = 10 * 60 * 1000;
     private final AccountManager manager;
 
-    public WebSocketChatServlet(AccountManager man) {
+    public WebSocketGameServlet(AccountManager man) {
         manager = man;
     }
 

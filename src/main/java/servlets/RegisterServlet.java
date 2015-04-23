@@ -7,6 +7,9 @@ package servlets;
  */
 import java.io.IOException;
 
+import org.json.simple.JSONObject;
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
 import user.AccountManager;
 import user.User;
 
@@ -31,23 +34,15 @@ public class RegisterServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
 
-        String username = request.getParameter("name");
-        String password = request.getParameter("password");
-        String email    = request.getParameter("email");
+        AccountManagerResource resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
 
+        String username = request.getParameter(resource.getUsernameAPIName());
+        String password = request.getParameter(resource.getPasswordAPIName());
+        String email    = request.getParameter(resource.getEmailAPIName());
 
         HttpSession session = request.getSession();
+        JSONObject result = manager.registerUser(username, password, email, session.getId());
 
-        try {
-            User user = manager.registerUser(username, password, email);
-            manager.addSession(session.getId(), user);
-            pageVariables.put("status", "OK");
-            pageVariables.put("message", "Registration complete");
-        } catch (Exception e) {
-            pageVariables.put("status", "Error");
-            pageVariables.put("message", e.getMessage());
-        }
-
-        tg.generate(response.getWriter(), "reg.json", pageVariables);
+        response.getWriter().write(result.toJSONString());
     }
 }

@@ -1,6 +1,8 @@
 package servlets;
 
 import org.json.simple.JSONObject;
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
 import user.AccountManager;
 
 import javax.servlet.http.HttpServlet;
@@ -26,8 +28,10 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         manager.logout(session.getId());
 
-        String username = request.getParameter("name");
-        String password = request.getParameter("password");
+        AccountManagerResource resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
+
+        String username = request.getParameter(resource.getUsernameAPIName());
+        String password = request.getParameter(resource.getPasswordAPIName());
 
         JSONObject result = manager.authenticate(session.getId(), username, password);
         response.getWriter().write(result.toJSONString());

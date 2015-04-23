@@ -15,14 +15,32 @@ public class AccountManagerResource implements Resource {
     private String incorrectPassword;
     private String userNotFound;
     private String authSuccess;
+    private String registrationSuccess;
+    private String usernameAPIName;
+    private String emailAPIName;
+    private String passwordAPIName;
 
     public AccountManagerResource() {
-
     }
 
+    public String getPasswordAPIName() {
+        return passwordAPIName;
+    }
+
+    public String getUsernameAPIName() {
+        return usernameAPIName;
+    }
+
+    public String getEmailAPIName() {
+        return emailAPIName;
+    }
 
     public String getAuthSuccess() {
         return authSuccess;
+    }
+
+    public String getRegistrationSuccess() {
+        return registrationSuccess;
     }
 
     public String getAdminName() {

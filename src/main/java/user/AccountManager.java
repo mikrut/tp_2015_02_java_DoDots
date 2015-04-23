@@ -10,7 +10,8 @@ import java.util.Map;
  * Package: ${PACKAGE_NAME}
  */
 public interface AccountManager {
-    public User registerUser(String username, String password, String email) throws Exception;
+    public JSONObject registerUser(String username, String password, String email);
+    public JSONObject registerUser(String username, String password, String email, String session);
     public Map<String, User> getAllRegistered();
     public void deleteUser(String username);
 
@@ -18,8 +19,9 @@ public interface AccountManager {
     public Integer getSessionCount();
 
     public JSONObject authenticate(String sessionId, String username, String password);
-    public User checkAuthable(String username, String password) throws Exception;
     public void addSession(String sessionId, User usr);
+    public String checkAuthable(String username, String password);
     public User getAuthenticated(String sessionId);
     public void logout(String sessionId);
+    public User findUser(String username);
 }

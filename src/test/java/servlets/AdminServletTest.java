@@ -119,7 +119,15 @@ public class AdminServletTest {
         JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
         JSONArray usersArray = ((JSONArray)obj.get("users"));
         assertEquals("Expected two users on server", 2, usersArray.size());
-        assertEquals("Expected user to have name \""+ username+"\"", username, ((JSONObject) usersArray.get(0)).get("username"));
+        boolean found = false;
+        int i = 0;
+        while(!found && i<usersArray.size()) {
+            if(((JSONObject) usersArray.get(i)).get("username").equals(username))
+                found = true;
+            i++;
+        }
+
+        assertTrue("Expected to find user with name \"" + username + "\"", found);
     }
 
     @Test
@@ -138,7 +146,14 @@ public class AdminServletTest {
         JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
         JSONArray usersArray = ((JSONArray)obj.get("users"));
         assertEquals("Expected two users on server after logout", 2, usersArray.size());
-        assertEquals("Expected user to be admin", adminUsername, ((JSONObject) usersArray.get(1)).get("username"));
+        boolean found = false;
+        int i = 0;
+        while(!found && i<usersArray.size()) {
+            if(((JSONObject) usersArray.get(i)).get("username").equals(adminUsername))
+                found = true;
+            i++;
+        }
+        assertTrue("Expected to find admin", found);
     }
 
     @Test

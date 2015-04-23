@@ -34,45 +34,57 @@ public class DAOAccountManager implements AccountManager {
 
         resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
         responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
-        try {
-            User admin = registerUser(resource.getAdminName(),
+
+        User admin = findUser(resource.getAdminName());
+        if(admin == null) {
+            registerUser(resource.getAdminName(),
                     resource.getAdminPassword(),
                     resource.getAdminEmail());
+            admin = findUser(resource.getAdminName());
             admin.setStatus(User.Rights.ADMIN);
             saveUser(admin);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
-    public User registerUser(String username, String password, String email) throws Exception {
+    public JSONObject registerUser(String username, String password, String email) {
+        return registerUser(username, password, email, null);
+    }
+
+    public JSONObject registerUser(String username, String password, String email, String session) {
         Session registerSession = sessionFactory.openSession();
+        JSONObject response = new JSONObject();
 
-        if(username==null || password == null || email == null)
-            throw new Exception(resource.getNullQueryAnswer());
-
-        User usr = (User) registerSession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
-
-        if(usr == null) {
-            usr = new User(username, password, email, null);
-
-            Transaction transaction = registerSession.beginTransaction();
-            registerSession.save(usr);
-            transaction.commit();
-
-            usr = findUser(username);
-            try {
-                checkAuthable(username, password);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(username==null || password == null || email == null) {
+            response.put(responseResource.getStatus(), responseResource.getError());
+            response.put(responseResource.getMessage(), resource.getNullQueryAnswer());
         } else {
-            registerSession.close();
-            throw new Exception(resource.getUserAlreadyExists());
+            User usr = (User) registerSession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+
+            if (usr == null) {
+                usr = new User(username, password, email, null);
+
+                Transaction transaction = registerSession.beginTransaction();
+                registerSession.save(usr);
+                transaction.commit();
+
+                // usr = findUser(username);
+                // We don't check authable after registration because we think that our class works as needed.
+                // String authableMessage = checkAuthable(username, password);
+
+                if (session != null) {
+                    authenticate(session, username, password);
+                }
+
+                response.put(responseResource.getStatus(), responseResource.getOk());
+                response.put(responseResource.getMessage(), resource.getRegistrationSuccess());
+            } else {
+                response.put(responseResource.getStatus(), responseResource.getError());
+                response.put(responseResource.getMessage(), resource.getUserAlreadyExists());
+            }
         }
         registerSession.close();
 
-        return usr;
+        return response;
     }
 
     public Map<String, User> getAllRegistered() {
@@ -126,7 +138,7 @@ public class DAOAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
-    protected User findUser(String username) {
+    public User findUser(String username) {
         Session querySession = sessionFactory.openSession();
         return (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
     }
@@ -151,17 +163,15 @@ public class DAOAccountManager implements AccountManager {
         return response;
     }
 
-    public User checkAuthable(String username, String password) throws Exception {
+    public String checkAuthable(String username, String password) {
         User usr = findUser(username);
 
-        if(usr != null){
-            if(!usr.checkPassword(password)) {
-                throw new Exception(resource.getIncorrectPassword());
-            }
-        } else {
-            throw new Exception(resource.getUserNotFound());
-        }
-        return usr;
+        if(usr == null)
+            return resource.getUserNotFound();
+        if(!usr.checkPassword(password))
+            return resource.getIncorrectPassword();
+
+        return null;
     }
 
     public void addSession(String sessionId, User usr) {

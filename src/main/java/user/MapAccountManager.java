@@ -26,14 +26,12 @@ public class MapAccountManager implements AccountManager {
     public MapAccountManager() {
         resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
         responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
-        try {
-            User admin = registerUser(resource.getAdminName(),
-                                      resource.getAdminPassword(),
-                                      resource.getAdminEmail());
-            admin.setStatus(User.Rights.ADMIN);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        registerUser(resource.getAdminName(),
+                     resource.getAdminPassword(),
+                     resource.getAdminEmail());
+        User admin = findUser(resource.getAdminName());
+        admin.setStatus(User.Rights.ADMIN);
     }
 
     public static AccountManager getManager() {
@@ -52,29 +50,46 @@ public class MapAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
-    User findUser(String username) {
-        return new User(registeredList.getOrDefault(username, null));
+    public User findUser(String username) {
+        User usr = registeredList.getOrDefault(username, null);
+        return usr;
     }
 
-    public User registerUser(String username, String password, String email) throws Exception {
-        User usr;
+    public JSONObject registerUser(String username, String password, String email) {
+        return registerUser(username, password, email, null);
+    }
 
-        if(username==null || password == null || email == null)
-            throw new Exception(resource.getNullQueryAnswer());
+    public JSONObject registerUser(String username, String password, String email, String session) {
+        JSONObject response = new JSONObject();
 
-        if(!registeredList.containsKey(username)) {
-            usr = new User(username, password, email, userIdGenerator.getAndIncrement());
-
-            registeredList.put(username, usr);
-            try {
-                checkAuthable(username, password);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(username==null || password == null || email == null) {
+            response.put(responseResource.getStatus(), responseResource.getError());
+            response.put(responseResource.getMessage(), resource.getNullQueryAnswer());
         } else {
-            throw new Exception(resource.getUserAlreadyExists());
+            User usr;
+
+            if (!registeredList.containsKey(username)) {
+                usr = new User(username, password, email, userIdGenerator.getAndIncrement());
+
+                registeredList.put(username, usr);
+
+                // usr = findUser(username);
+                // We don't check authable after registration because we think that our class works as needed.
+                // String authableMessage = checkAuthable(username, password);
+
+                if (session != null) {
+                    authenticate(session, username, password);
+                }
+
+                response.put(responseResource.getStatus(), responseResource.getOk());
+                response.put(responseResource.getMessage(), resource.getRegistrationSuccess());
+            } else {
+                response.put(responseResource.getStatus(), responseResource.getError());
+                response.put(responseResource.getMessage(), resource.getUserAlreadyExists());
+            }
         }
-        return usr;
+
+        return response;
     }
 
     public void deleteUser(String username) {
@@ -108,17 +123,15 @@ public class MapAccountManager implements AccountManager {
         return response;
     }
 
-    public User checkAuthable(String username, String password) throws Exception {
+    public String checkAuthable(String username, String password) {
         User usr = findUser(username);
 
-        if(usr != null){
-            if(!usr.checkPassword(password)) {
-                throw new Exception(resource.getIncorrectPassword());
-            }
-        } else {
-            throw new Exception(resource.getUserNotFound());
-        }
-        return usr;
+        if(usr == null)
+            return resource.getUserNotFound();
+        if(!usr.checkPassword(password))
+            return resource.getIncorrectPassword();
+
+        return null;
     }
 
     public void addSession(String sessionId, User usr){

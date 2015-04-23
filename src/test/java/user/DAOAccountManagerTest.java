@@ -8,6 +8,8 @@ import org.hibernate.service.ServiceRegistry;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import resources.DBResource;
+import resources.ResourceProvider;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
@@ -23,14 +25,16 @@ public class DAOAccountManagerTest {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
 
-        configuration.setProperty("hibernate.dialect",                 "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url",          "jdbc:mysql://localhost:3306/tp_dodots_test");
-        configuration.setProperty("hibernate.connection.username",     "root");
-        configuration.setProperty("hibernate.connection.password",     "0000");
-        configuration.setProperty("hibernate.show_sql",                "true");
+        DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
+
+        configuration.setProperty("hibernate.dialect",                 resource.getDbDialect());
+        configuration.setProperty("hibernate.connection.driver_class", resource.getDbDriverClassName());
+        configuration.setProperty("hibernate.connection.url",          resource.getDbURL()+resource.getDbTestName());
+        configuration.setProperty("hibernate.connection.username",     resource.getDbUser());
+        configuration.setProperty("hibernate.connection.password",     resource.getDbPassword());
+        configuration.setProperty("hibernate.show_sql",                resource.getShowSql());
         configuration.setProperty("hibernate.hbm2ddl.auto",            "create");
-        configuration.setProperty("hibernate.flushMode",               "COMMIT");
+        configuration.setProperty("hibernate.flushMode",               resource.getFlushMode());
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
         builder.applySettings(configuration.getProperties());
@@ -56,7 +60,8 @@ public class DAOAccountManagerTest {
         System.out.println("Testing signin");
 
         manager.deleteUser("username");
-        User usr = manager.registerUser("username", "userpassword", "email");
+        manager.registerUser("username", "userpassword", "email");
+        User usr = manager.findUser("username");
         assertNotNull("Expected to get registered user. Got nothing.", usr);
         manager.deleteUser(usr.getUsername());
     }
@@ -76,16 +81,17 @@ public class DAOAccountManagerTest {
         System.out.println("Testing deletion");
 
         manager.deleteUser("username");
-        User usr = manager.registerUser("username", "userpassword", "email");
-        manager.deleteUser(usr.getUsername());
-        usr = manager.findUser(usr.getUsername());
+        manager.registerUser("username", "userpassword", "email");
+        manager.deleteUser("username");
+        User usr = manager.findUser("username");
         assertNull("Expected to get nothing because of user deleted. But got user!", usr);
     }
 
     @Test
     public void testSaveUser() throws Exception {
         manager.deleteUser("username");
-        User usr = manager.registerUser("username", "userpassword", "email@yandex.ru");
+        manager.registerUser("username", "userpassword", "email@yandex.ru");
+        User usr = manager.findUser("username");
         usr.setEmail("new_email@mail.ru");
         manager.saveUser(usr);
         usr = manager.findUser(usr.getUsername());
