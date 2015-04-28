@@ -14,6 +14,7 @@ import resources.ResourceProvider;
  */
 public class DAManager {
     DAOAccountManager manager;
+    static private DAManager singleton = new DAManager();
 
     public DAManager() {
         manager = new DAOAccountManager(getFactory());
@@ -43,5 +44,9 @@ public class DAManager {
         ServiceRegistry registry = builder.build();
 
         return configuration.buildSessionFactory(registry);
+    }
+
+    public static DAManager getSingleton() {
+        return singleton;
     }
 }

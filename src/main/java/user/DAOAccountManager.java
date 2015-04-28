@@ -138,6 +138,18 @@ public class DAOAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
+    public void incScore(User usr, Integer score) {
+        Session scoreSession = sessionFactory.openSession();
+        Transaction transaction = scoreSession.beginTransaction();
+
+        User myUser = (User) scoreSession.get(User.class, usr);
+        myUser.incScore(score);
+        scoreSession.save(myUser);
+
+        transaction.commit();
+        scoreSession.close();
+    }
+
     public User findUser(String username) {
         Session querySession = sessionFactory.openSession();
         return (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();

@@ -29,6 +29,8 @@ public class User implements Serializable {
     private String email;
     @Column
     private Rights status;
+    @Column
+    private Integer score;
 
     public User() {
     }
@@ -48,6 +50,7 @@ public class User implements Serializable {
         this.setEmail(email);
         this.setUserId(uid);
         this.setStatus(r);
+        this.score = 0;
     }
 
     public void setUsername(String username) {
@@ -60,6 +63,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = new String(email);
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void incScore(Integer sc) {
+        this.score += sc;
     }
 
     public void setUserId(Long uid) {

@@ -8,11 +8,16 @@
   <gameStartStatus>Game start</gameStartStatus>
   <gameStartMessage>Let the game start!</gameStartMessage>
 
+  <gameEndStatus>GameEnd</gameEndStatus>
+  <gameEndMessage>Game over!</gameEndMessage>
+
   <boardCall>board</boardCall>
 
   <firstPlayerFieldCall>is_first</firstPlayerFieldCall>
   <whoMovesCall>who_moves</whoMovesCall>
+  <scoreCall>score</scoreCall>
+  <gameEndCall>game_end</gameEndCall>
 
-  <boardSizeX>5</boardSizeX>
-  <boardSizeY>5</boardSizeY>
+  <boardSizeX>10</boardSizeX>
+  <boardSizeY>10</boardSizeY>
 </object>

@@ -17,7 +17,7 @@ public class Board {
     private final Integer rowSize;
     private final Integer colSize;
     private User users[] = new User[2];
-    private Integer whoMoves = 0;
+    private Integer whoMoves = 0, score[] = new Integer[2];
 
     public Board(Integer rows, Integer cols, User u1, User u2) {
         rowSize = rows;
@@ -28,6 +28,9 @@ public class Board {
                 cells[i][j] = new Cell();
         users[0]  = u1;
         users[1]  = u2;
+
+        score[0] = 0;
+        score[1] = 0;
     }
 
 
@@ -35,7 +38,9 @@ public class Board {
         if (user != users[whoMoves] || row < 0 || row >= rowSize || col < 0 || col>= rowSize || cells[row][col].getOwner() != null) {
             return false;
         } else {
+            score[whoMoves]++;
             whoMoves = 1 - whoMoves;
+
             cells[row][col].setOwner(user);
             findCycles(row, col, user);
             return true;
@@ -43,6 +48,10 @@ public class Board {
     }
 
     protected  void captureObligatory(User user, Integer row, Integer col) {
+        if (cells[row][col].getOwner() != user && cells[row][col].getOwner() != null) {
+            score[1-whoMoves]--;
+        }
+        score[whoMoves]++;
         cells[row][col].setOwner(user);
     }
 
@@ -69,6 +78,10 @@ public class Board {
 
     public Integer getWhoMoves() {
         return whoMoves;
+    }
+
+    public Integer getScore(Integer index) {
+        return score[index];
     }
 
     protected void unvisitAll() {

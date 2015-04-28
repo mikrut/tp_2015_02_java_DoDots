@@ -16,11 +16,33 @@ public class GameInfoResource implements Resource {
     private String boardCall;
     private String gameStartStatus;
     private String gameStartMessage;
+    private String gameEndStatus;
+    private String gameEndMessage;
     private String firstPlayerFieldCall;
     private String whoMovesCall;
 
+    private String scoreCall;
+    private String gameEndCall;
+
     private Integer boardSizeX;
     private Integer boardSizeY;
+
+    public String getScoreCall() {
+        return scoreCall;
+    }
+
+    public String getGameEndStatus() {
+        return gameEndStatus;
+    }
+
+    public String getGameEndMessage() {
+        return gameEndMessage;
+    }
+
+    public String getGameEndCall() {
+        return gameEndCall;
+    }
+
 
     public String getConnectCloseStatus() {
         return connectCloseStatus;

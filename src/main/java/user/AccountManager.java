@@ -24,4 +24,6 @@ public interface AccountManager {
     public User getAuthenticated(String sessionId);
     public void logout(String sessionId);
     public User findUser(String username);
+
+    public void incScore(User usr, Integer score);
 }

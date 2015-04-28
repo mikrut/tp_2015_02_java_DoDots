@@ -1,5 +1,6 @@
 package servlets;
 
+import org.json.simple.JSONObject;
 import user.AccountManager;
 import user.User;
 
@@ -18,7 +19,6 @@ import java.util.Map;
  */
 public class UserInfoServlet extends HttpServlet {
     private final AccountManager manager;
-    private final TemplateGenerator tg = new TemplateGenerator();
 
     public UserInfoServlet(AccountManager mgr) {
         manager = mgr;
@@ -26,21 +26,23 @@ public class UserInfoServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
         User usr = manager.getAuthenticated(session.getId());
+        JSONObject answer = new JSONObject();
 
         if (usr != null) {
-            pageVariables.put("loggedIn", true);
-            pageVariables.put("username", usr.getUsername());
-            pageVariables.put("email",    usr.getEmail());
+            answer.put("loggedIn", true);
+            answer.put("username", usr.getUsername());
+            answer.put("email",    usr.getEmail());
+            answer.put("score",    usr.getScore());
         } else {
-            pageVariables.put("loggedIn", false);
-            pageVariables.put("username", "Guest");
-            pageVariables.put("email",    "none");
+            answer.put("loggedIn", false);
+            answer.put("username", "Guest");
+            answer.put("email",    "none");
+            answer.put("score",    0);
         }
 
-        tg.generate(response.getWriter(), "userinfo.json", pageVariables);
+        response.getWriter().write(answer.toJSONString());
     }
 }

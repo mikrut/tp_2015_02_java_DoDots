@@ -5,6 +5,8 @@ package user;
  * 01.03.2015 9:15
  * Package: ${PACKAGE_NAME}
  */
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
@@ -100,6 +102,11 @@ public class MapAccountManager implements AccountManager {
             }
             registeredList.remove(username);
         }
+    }
+
+    public void incScore(User usr, Integer score) {
+        User myUser = findUser(usr.getUsername());
+        myUser.incScore(score);
     }
 
     @SuppressWarnings("unchecked")
