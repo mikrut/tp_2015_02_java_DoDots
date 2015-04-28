@@ -39,10 +39,9 @@ public class Board {
             return false;
         } else {
             score[whoMoves]++;
-            whoMoves = 1 - whoMoves;
-
             cells[row][col].setOwner(user);
             findCycles(row, col, user);
+            whoMoves = 1 - whoMoves;
             return true;
         }
     }
@@ -51,7 +50,8 @@ public class Board {
         if (cells[row][col].getOwner() != user && cells[row][col].getOwner() != null) {
             score[1-whoMoves]--;
         }
-        score[whoMoves]++;
+        if (cells[row][col].getOwner() != user)
+            score[whoMoves]++;
         cells[row][col].setOwner(user);
     }
 

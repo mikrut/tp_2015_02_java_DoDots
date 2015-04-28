@@ -54,6 +54,10 @@ public class ClickGameImp implements  Game{
         Integer score1 = board.getScore(0);
         Integer score2 = board.getScore(1);
 
+        if (obj == null) {
+            obj = new JSONObject();
+        }
+
         if (!gameEnd) {
             if (obj == null
                     || !obj.containsKey("row")
@@ -74,6 +78,7 @@ public class ClickGameImp implements  Game{
                     if (score1 + score2 == setup.getBoardSizeX() * setup.getBoardSizeY()) {
                         DAManager.getSingleton().getAccountManager().incScore(sock1.getClient(), score1);
                         DAManager.getSingleton().getAccountManager().incScore(sock2.getClient(), score2);
+                        gameEnd = true;
                     }
 
                 } else {

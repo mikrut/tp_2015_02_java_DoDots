@@ -29,8 +29,8 @@ public class User implements Serializable {
     private String email;
     @Column
     private Rights status;
-    @Column
-    private Integer score;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer score = 0;
 
     public User() {
     }

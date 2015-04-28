@@ -142,7 +142,7 @@ public class DAOAccountManager implements AccountManager {
         Session scoreSession = sessionFactory.openSession();
         Transaction transaction = scoreSession.beginTransaction();
 
-        User myUser = (User) scoreSession.get(User.class, usr);
+        User myUser = (User) scoreSession.get(User.class, usr.getID());
         myUser.incScore(score);
         scoreSession.save(myUser);
 
@@ -191,6 +191,10 @@ public class DAOAccountManager implements AccountManager {
     }
 
     public User getAuthenticated(String sessionId) {
+        if (loggedInList.containsKey(sessionId)) {
+            User usr = loggedInList.get(sessionId);
+            loggedInList.put(sessionId, findUser(usr.getUsername()));
+        }
         return loggedInList.get(sessionId);
     }
 

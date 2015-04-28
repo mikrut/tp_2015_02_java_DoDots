@@ -98,4 +98,18 @@ public class DAOAccountManagerTest {
         assertEquals("Expected email to change from email@yandex.ru to new_email@mail.ru", usr.getEmail(), "new_email@mail.ru");
         manager.deleteUser(usr.getUsername());
     }
+
+    @Test
+    public void testIncScore() throws Exception {
+        manager.deleteUser("username");
+        manager.registerUser("username", "userpassword", "email@yandex.ru");
+        User usr = manager.findUser("username");
+        int score1 = usr.getScore();
+        int inc = 10;
+        manager.incScore(usr, inc);
+        usr = manager.findUser("username");
+        int score2 = usr.getScore();
+        assertEquals("Expected score to increase by 10", score2, inc+score1);
+        manager.deleteUser(usr.getUsername());
+    }
 }
