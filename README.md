@@ -74,7 +74,17 @@ Exempli gratia, basic responses can be edited in response_resource.xml file.
 ```
 {
   "loggedIn": true/false,
-  "username": ${username}
+  "username": ${username},
+  "email": ${email},
+  "score": ${score},
+  "results": [
+    {
+      "user1" : ${user1name},
+      "score1": ${user1score},
+      "user2" : ${user2name},
+      "score2": ${user2score}
+    } ...
+  ]
 }
 ```
 
@@ -152,7 +162,7 @@ Nota bene: user should be authorized, user can play with himself if he uses diff
 {
   "col":"2",
   "row":"1",
-  "message":"Data accepted."/"Invalid data.",
+  "message":"Data accepted."/"Invalid data."/"Game over!",
   "board":[
     [0,0,0,0,0],
     [0,0,1,0,0], // 0 - free, 1 - first player, 2 - second player
@@ -160,7 +170,7 @@ Nota bene: user should be authorized, user can play with himself if he uses diff
     [0,0,0,0,0],
     [0,0,0,0,0]
   ],
-  "status":"OK"/"Error",
+  "status":"OK"/"Error"/"GameEnd",
   "who_moves":1 // Index of player having next step right: 0 - first, 1 - second
 }
 ```

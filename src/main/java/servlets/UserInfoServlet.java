@@ -1,7 +1,9 @@
 package servlets;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.AccountManager;
+import user.GameResults;
 import user.User;
 
 import javax.servlet.http.HttpServlet;
@@ -32,15 +34,29 @@ public class UserInfoServlet extends HttpServlet {
         JSONObject answer = new JSONObject();
 
         if (usr != null) {
+            JSONArray results = new JSONArray();
+            if (usr.getGameResults() != null) {
+                for(GameResults result: usr.getGameResults()) {
+                    JSONObject resultInJSON = new JSONObject();
+                    resultInJSON.put("user1", result.getUser1().getUsername());
+                    resultInJSON.put("score1", result.getUser1Score());
+                    resultInJSON.put("user2", result.getUser2().getUsername());
+                    resultInJSON.put("score2", result.getUser2Score());
+                    results.add(resultInJSON);
+                }
+            }
+
             answer.put("loggedIn", true);
             answer.put("username", usr.getUsername());
             answer.put("email",    usr.getEmail());
             answer.put("score",    usr.getScore());
+            answer.put("results",  results);
         } else {
             answer.put("loggedIn", false);
             answer.put("username", "Guest");
             answer.put("email",    "none");
             answer.put("score",    0);
+            answer.put("results", null);
         }
 
         response.getWriter().write(answer.toJSONString());

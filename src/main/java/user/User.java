@@ -6,15 +6,20 @@ package user;
  * Package: ${PACKAGE_NAME}
  */
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
 public class User implements Serializable {
     public enum Rights {ADMIN, BASIC}
+    private SessionFactory sessionFactory = null;
 
     @Id
     @Column(name="id")
@@ -31,6 +36,11 @@ public class User implements Serializable {
     private Rights status;
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer score = 0;
+
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="user1", targetEntity = GameResults.class)
+    private Set<GameResults> gamesAsFirstPlayer;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="user2", targetEntity = GameResults.class)
+    private Set<GameResults> gamesAsSecondPlayer;
 
     public User() {
     }
@@ -116,5 +126,16 @@ public class User implements Serializable {
         }
 
         return result;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public Set<GameResults> getGameResults() {
+        Set<GameResults> total = gamesAsFirstPlayer;
+        if (total != null)
+            total.addAll(gamesAsSecondPlayer);
+        return total;
     }
 }

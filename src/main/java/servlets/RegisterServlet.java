@@ -23,15 +23,12 @@ import java.util.Map;
 public class RegisterServlet extends HttpServlet {
     private final AccountManager manager;
 
-    private final TemplateGenerator tg = new TemplateGenerator();
-
     public RegisterServlet(AccountManager mgr) {
         manager = mgr;
     }
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
 
         AccountManagerResource resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");

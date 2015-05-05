@@ -24,6 +24,7 @@ public class DAOAccountManagerTest {
 
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(GameResults.class);
 
         DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
 
@@ -111,5 +112,11 @@ public class DAOAccountManagerTest {
         int score2 = usr.getScore();
         assertEquals("Expected score to increase by 10", score2, inc+score1);
         manager.deleteUser(usr.getUsername());
+    }
+
+    @Test
+    public void testFindUser() throws Exception {
+        User user = manager.findUser("admin");
+        TestCase.assertNotNull(user);
     }
 }

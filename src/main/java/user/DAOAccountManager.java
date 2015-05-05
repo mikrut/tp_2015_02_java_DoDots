@@ -17,10 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by mihanik
  * 19.04.15 14:53
  * Package: user
- *
- * Откуда вдруг такая лень?
- * Едва меня сегодня добудились...
- * Шумит весенний дождь.
  */
 
 public class DAOAccountManager implements AccountManager {
@@ -103,11 +99,7 @@ public class DAOAccountManager implements AccountManager {
         deleteUser(user.getUsername());
 
         Session saveSession = sessionFactory.openSession();
-        Transaction transaction = saveSession.beginTransaction();
-
         saveSession.save(user);
-
-        transaction.commit();
         saveSession.close();
     }
 
@@ -152,7 +144,13 @@ public class DAOAccountManager implements AccountManager {
 
     public User findUser(String username) {
         Session querySession = sessionFactory.openSession();
-        return (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+        Transaction transaction = querySession.beginTransaction();
+        User usr = (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+        transaction.commit();
+        querySession.close();
+        if (usr != null)
+            usr.setSessionFactory(sessionFactory);
+        return usr;
     }
 
     public JSONObject authenticate(String sessionId, String username, String password) {

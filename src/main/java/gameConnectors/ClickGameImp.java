@@ -78,6 +78,10 @@ public class ClickGameImp implements  Game{
                     if (score1 + score2 == setup.getBoardSizeX() * setup.getBoardSizeY()) {
                         DAManager.getSingleton().getAccountManager().incScore(sock1.getClient(), score1);
                         DAManager.getSingleton().getAccountManager().incScore(sock2.getClient(), score2);
+
+                        DAManager.getSingleton().getGameResults().addResult(sock1.getClient(), score1.longValue(),
+                                                                            sock2.getClient(), score2.longValue());
+
                         gameEnd = true;
                     }
 
