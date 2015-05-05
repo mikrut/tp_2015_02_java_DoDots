@@ -6,9 +6,6 @@ package user;
  * Package: ${PACKAGE_NAME}
  */
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +16,6 @@ import java.util.Set;
 @Table(name="users")
 public class User implements Serializable {
     public enum Rights {ADMIN, BASIC}
-    private SessionFactory sessionFactory = null;
 
     @Id
     @Column(name="id")
@@ -37,8 +33,10 @@ public class User implements Serializable {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer score = 0;
 
+    @SuppressWarnings("UnusedDeclaration")
     @OneToMany(fetch=FetchType.EAGER, mappedBy="user1", targetEntity = GameResults.class)
     private Set<GameResults> gamesAsFirstPlayer;
+    @SuppressWarnings({"UnusedDeclaration", "MismatchedQueryAndUpdateOfCollection"})
     @OneToMany(fetch=FetchType.EAGER, mappedBy="user2", targetEntity = GameResults.class)
     private Set<GameResults> gamesAsSecondPlayer;
 
@@ -47,7 +45,7 @@ public class User implements Serializable {
 
     public User(User usr) {
         this(usr.getUsername(), "something", usr.getEmail(), usr.getID(), usr.getStatus());
-        passHash = new String(usr.passHash);
+        passHash = usr.passHash;
     }
 
     public User(String username, String password, String email, Long uid) {
@@ -63,16 +61,16 @@ public class User implements Serializable {
         this.score = 0;
     }
 
-    public void setUsername(String username) {
-        this.username = new String(username);
+    void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setPassword(String password) {
+    void setPassword(String password) {
         passHash = makePassHash(password);
     }
 
     public void setEmail(String email) {
-        this.email = new String(email);
+        this.email = email;
     }
 
     public Integer getScore() {
@@ -83,9 +81,9 @@ public class User implements Serializable {
         this.score += sc;
     }
 
-    public void setUserId(Long uid) {
+    void setUserId(Long uid) {
         if(uid != null)
-            userId = new Long(uid);
+            userId = uid;
         else
             userId = null;
     }
@@ -99,15 +97,15 @@ public class User implements Serializable {
     }
 
     public String getUsername() {
-        return new String(username);
+        return username;
     }
 
     public String getEmail() {
-        return new String(email);
+        return email;
     }
 
     public Long getID(){
-        return new Long(userId);
+        return userId;
     }
 
     public Boolean checkPassword(String password) {
@@ -126,10 +124,6 @@ public class User implements Serializable {
         }
 
         return result;
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     public Set<GameResults> getGameResults() {

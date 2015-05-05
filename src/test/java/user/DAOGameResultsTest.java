@@ -1,13 +1,10 @@
 package user;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import resources.AccountManagerResource;
 import resources.DBResource;
@@ -17,11 +14,10 @@ import resources.ResourceProvider;
 import static junit.framework.TestCase.assertEquals;
 
 public class DAOGameResultsTest {
-    DAOGameResults gr;
-    DAOAccountManager manager;
+    private DAOGameResults gr;
+    private DAOAccountManager manager;
 
-    DBResource resource;
-    AccountManagerResource accountManagerResource;
+    private AccountManagerResource accountManagerResource;
 
     @Before
     public void initialize() {
@@ -31,12 +27,12 @@ public class DAOGameResultsTest {
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(GameResults.class);
 
-        resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
+        DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
         accountManagerResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
 
         configuration.setProperty("hibernate.dialect",                 resource.getDbDialect());
         configuration.setProperty("hibernate.connection.driver_class", resource.getDbDriverClassName());
-        configuration.setProperty("hibernate.connection.url",          resource.getDbURL()+resource.getDbTestName());
+        configuration.setProperty("hibernate.connection.url",          resource.getDbURL()+ resource.getDbTestName());
         configuration.setProperty("hibernate.connection.username",     resource.getDbUser());
         configuration.setProperty("hibernate.connection.password",     resource.getDbPassword());
         configuration.setProperty("hibernate.show_sql",                resource.getShowSql());

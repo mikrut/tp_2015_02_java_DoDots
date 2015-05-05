@@ -6,10 +6,6 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import user.AccountManager;
 import user.User;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Created by mihanik
  * 31.03.15 9:15

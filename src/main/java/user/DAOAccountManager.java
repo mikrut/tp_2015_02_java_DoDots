@@ -11,7 +11,6 @@ import resources.ResponseResource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by mihanik
@@ -23,7 +22,7 @@ public class DAOAccountManager implements AccountManager {
     private final Map<String, User> loggedInList = new HashMap<>();
     private AccountManagerResource resource = null;
     private ResponseResource responseResource = null;
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     public DAOAccountManager(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -46,6 +45,7 @@ public class DAOAccountManager implements AccountManager {
         return registerUser(username, password, email, null);
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject registerUser(String username, String password, String email, String session) {
         Session registerSession = sessionFactory.openSession();
         JSONObject response = new JSONObject();
@@ -83,6 +83,7 @@ public class DAOAccountManager implements AccountManager {
         return response;
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, User> getAllRegistered() {
         Session searchSession = sessionFactory.openSession();
         Criteria criteria = searchSession.createCriteria(User.class);
@@ -148,11 +149,10 @@ public class DAOAccountManager implements AccountManager {
         User usr = (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
         transaction.commit();
         querySession.close();
-        if (usr != null)
-            usr.setSessionFactory(sessionFactory);
         return usr;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject authenticate(String sessionId, String username, String password) {
         User usr = findUser(username);
         JSONObject response = new JSONObject();

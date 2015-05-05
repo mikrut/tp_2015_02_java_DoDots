@@ -12,6 +12,7 @@ interface MyWebSocket {
     public void sendMessage(String message);
     public User getClient();
     public void setGame(Game g);
+    @SuppressWarnings("UnusedDeclaration")
     public Session getSession();
     public void setProvider(GameProvider p);
 }

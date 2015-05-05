@@ -13,11 +13,11 @@ import resources.ResourceProvider;
  * Package: user
  */
 public class DAManager {
-    DAOAccountManager manager;
-    DAOGameResults gameResults;
+    private final DAOAccountManager manager;
+    private final DAOGameResults gameResults;
 
-    static SessionFactory factory = null;
-    static private DAManager singleton = new DAManager();
+    private static final SessionFactory factory = null;
+    static private final DAManager singleton = new DAManager();
 
     public DAManager() {
         manager = new DAOAccountManager(getFactory());
@@ -37,6 +37,7 @@ public class DAManager {
     }
 
     private static SessionFactory getFactory() {
+        //noinspection ConstantConditions
         if (factory == null) {
             Configuration configuration = new Configuration();
             configuration.addAnnotatedClass(User.class);

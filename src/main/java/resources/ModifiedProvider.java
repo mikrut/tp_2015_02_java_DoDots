@@ -2,7 +2,6 @@ package resources;
 
 import reflector.XMLConfigParser;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
  */
 public class ModifiedProvider extends ResourceProvider {
     private final String dir = "./srv_tmpl";
-    private Map<String, Resource> resourceMap = new HashMap<>();
+    private final Map<String, Resource> resourceMap = new HashMap<>();
     private XMLConfigParser parser = null;
 
     public ModifiedProvider() {
@@ -48,6 +47,7 @@ public class ModifiedProvider extends ResourceProvider {
         File folder = new File(dir);
         if(folder.exists() && folder.isDirectory()) {
             if(folder.listFiles() != null) {
+                //noinspection ConstantConditions
                 for (File file : folder.listFiles()) {
                     String filename = file.getAbsolutePath();
                     String extension = "";

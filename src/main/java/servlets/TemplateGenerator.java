@@ -1,7 +1,6 @@
 package servlets;
 
 import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -30,7 +29,7 @@ class TemplateGenerator {
         }
     }
 
-    public void generate(Writer writer, String path, Map<String,Object> data) {
+    public void generate(Writer writer, @SuppressWarnings("SameParameterValue") String path, Map<String,Object> data) {
         try {
             if(path.equals("/")) path = "/index.html";
             Template template = CFG.getTemplate(path);

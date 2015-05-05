@@ -1,7 +1,5 @@
 package gameConnectors;
 
-import org.eclipse.jetty.websocket.api.BatchMode;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import user.User;
 
@@ -38,12 +36,14 @@ public class WebSocketImp implements MyWebSocket {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @OnWebSocketMessage
     public void onMessage(String message) {
         if(game!=null)
             game.dispatchMessage(this, message);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @OnWebSocketConnect
     public void onOpen(Session session) {
         setSession(session);
@@ -58,6 +58,7 @@ public class WebSocketImp implements MyWebSocket {
         return session;
     }
 
+    @SuppressWarnings({"UnusedDeclaration", "UnusedParameters"})
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         if(game != null)

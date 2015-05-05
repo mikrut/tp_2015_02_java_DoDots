@@ -66,7 +66,7 @@ public class AdminServletTest {
     }
 
     @After
-    public void doClean() throws Exception {
+    public void doClean() {
         Collection<String> users = new LinkedList<>();
         for (User user : mgr.getAllRegistered().values()) {
             if(!user.getUsername().equals(adminUsername)){

@@ -5,6 +5,7 @@ package resources;
  * 23.04.15 11:09
  * Package: resources
  */
+@SuppressWarnings("UnusedDeclaration")
 public class DBResource implements Resource {
     private String dbURL, dbUser, dbPassword, dbName, dbTestName, dbDialect, dbDriverClassName, showSql, hbm2DdlAuto, flushMode;
 

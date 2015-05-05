@@ -1,6 +1,5 @@
 package user;
 
-import junit.framework.Assert;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -9,7 +8,6 @@ import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;
 
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 public class MapAccountManagerTest {
@@ -89,7 +87,6 @@ public class MapAccountManagerTest {
         String pw = "password";
         String em = "email@mail";
         Integer numBefore;
-        User usr;
 
         numBefore = manager.getSessionCount();
         manager.registerUser(un, pw, em, sessionid);

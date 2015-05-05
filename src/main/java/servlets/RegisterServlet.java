@@ -11,14 +11,11 @@ import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import user.AccountManager;
-import user.User;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterServlet extends HttpServlet {
     private final AccountManager manager;

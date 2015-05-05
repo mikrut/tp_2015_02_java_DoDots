@@ -9,7 +9,7 @@ import user.User;
  */
 class Cell {
     private User owner = null;
-    private Boolean isVisited = false, isMarked = false;
+    private Boolean isMarked = false;
 
     public User getOwner() {
         return owner;
@@ -18,31 +18,20 @@ class Cell {
     public void setOwner(User user) {
         owner = user;
     }
-;
-    public void visit() {
-        isVisited = true;
-    }
 
     public void mark() {
         isMarked = true;
-    }
-
-    public void unvisit() {
-        isVisited = false;
     }
 
     public void unmark() {
         isMarked = false;
     }
 
-    public Boolean isVisited() {
-        return isVisited;
-    }
-
     public Boolean isMarked() {
         return isMarked;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public Boolean hasOwner() {
         return owner != null;
     }

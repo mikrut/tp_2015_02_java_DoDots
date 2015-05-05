@@ -23,6 +23,7 @@ public interface AccountManager {
     public String checkAuthable(String username, String password);
     public User getAuthenticated(String sessionId);
     public void logout(String sessionId);
+    @SuppressWarnings("UnusedDeclaration")
     public User findUser(String username);
 
     public void incScore(User usr, Integer score);

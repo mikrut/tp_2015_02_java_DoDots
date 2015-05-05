@@ -1,6 +1,5 @@
 package servlets;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import user.AccountManager;
 import user.MapAccountManager;

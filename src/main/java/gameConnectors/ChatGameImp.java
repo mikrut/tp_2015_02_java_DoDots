@@ -5,6 +5,7 @@ package gameConnectors;
  * 31.03.15 9:15
  * Package: ${PACKAGE_NAME}
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ChatGameImp implements Game {
     private MyWebSocket sock1, sock2;
 

@@ -5,6 +5,7 @@ package resources;
  * 07.04.15 8:58
  * Package: resources
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ResponseResource implements Resource {
     private String status;
     private String message;

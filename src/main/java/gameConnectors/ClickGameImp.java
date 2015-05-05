@@ -8,7 +8,6 @@ import resources.GameInfoResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;
 import user.DAManager;
-import user.User;
 
 /**
  * Created by mihanik
@@ -59,9 +58,7 @@ public class ClickGameImp implements  Game{
         }
 
         if (!gameEnd) {
-            if (obj == null
-                    || !obj.containsKey("row")
-                    || !obj.containsKey("col")) {
+            if (!obj.containsKey("row") || !obj.containsKey("col")) {
                 obj = new JSONObject();
                 obj.put(responseResource.getStatus(), responseResource.getError());
                 obj.put(responseResource.getMessage(), setup.getCommandInvalidMessage());

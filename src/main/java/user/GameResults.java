@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Entity
 @Table(name="results")
 public class GameResults implements Serializable {
+    @SuppressWarnings("UnusedDeclaration")
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,7 +46,7 @@ public class GameResults implements Serializable {
         return new User(user1);
     }
 
-    public void setUser1(User user1) {
+    void setUser1(User user1) {
         this.user1 = new User(user1);
     }
 
@@ -53,7 +54,7 @@ public class GameResults implements Serializable {
         return new User(user2);
     }
 
-    public void setUser2(User user2) {
+    void setUser2(User user2) {
         this.user2 = new User(user2);
     }
 
@@ -61,7 +62,7 @@ public class GameResults implements Serializable {
         return user1Score;
     }
 
-    public void setUser1Score(Long user1Score) {
+    void setUser1Score(Long user1Score) {
         this.user1Score = user1Score;
     }
 
@@ -69,7 +70,7 @@ public class GameResults implements Serializable {
         return user2Score;
     }
 
-    public void setUser2Score(Long user2Score) {
+    void setUser2Score(Long user2Score) {
         this.user2Score = user2Score;
     }
 }

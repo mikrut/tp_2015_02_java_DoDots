@@ -11,8 +11,9 @@ import resources.ResourceProvider;
  */
 public class FastGameProviderImp implements GameProvider {
     private MyWebSocket  socket = null;
-    private GameProviderResource setup = (GameProviderResource) ResourceProvider.getProvider().getResource("gameprovider.xml");
+    private final GameProviderResource setup = (GameProviderResource) ResourceProvider.getProvider().getResource("gameprovider.xml");
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addWebSocket(MyWebSocket sock) {
         JSONObject response = new JSONObject();

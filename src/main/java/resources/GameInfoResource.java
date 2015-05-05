@@ -1,13 +1,12 @@
 package resources;
 
-import java.util.IntSummaryStatistics;
-
 /**
  * Created by mihanik
  * 07.04.15 9:30
  * Package: resources
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class GameInfoResource implements Resource {
     private String connectCloseStatus;
     private String connectCloseMessage;

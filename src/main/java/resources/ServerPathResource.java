@@ -5,6 +5,7 @@ package resources;
  * 23.04.15 10:59
  * Package: resources
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ServerPathResource implements Resource {
     private String signinUrl;
     private String loginUrl;

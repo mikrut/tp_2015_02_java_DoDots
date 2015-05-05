@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import resources.DBResource;
@@ -16,7 +15,7 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
 public class DAOAccountManagerTest {
-    static DAOAccountManager manager;
+    private static DAOAccountManager manager;
 
     @BeforeClass
     public static void initialize() {

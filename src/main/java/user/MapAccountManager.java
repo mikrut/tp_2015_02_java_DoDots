@@ -5,8 +5,6 @@ package user;
  * 01.03.2015 9:15
  * Package: ${PACKAGE_NAME}
  */
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
@@ -36,6 +34,7 @@ public class MapAccountManager implements AccountManager {
         admin.setStatus(User.Rights.ADMIN);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static AccountManager getManager() {
         return singleton_manager;
     }
@@ -53,14 +52,14 @@ public class MapAccountManager implements AccountManager {
     }
 
     public User findUser(String username) {
-        User usr = registeredList.getOrDefault(username, null);
-        return usr;
+        return registeredList.getOrDefault(username, null);
     }
 
     public JSONObject registerUser(String username, String password, String email) {
         return registerUser(username, password, email, null);
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject registerUser(String username, String password, String email, String session) {
         JSONObject response = new JSONObject();
 

@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
  * Package: user
  */
 public class DAOGameResults {
-    SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
     public DAOGameResults(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

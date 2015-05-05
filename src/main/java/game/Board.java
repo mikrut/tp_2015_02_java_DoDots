@@ -1,6 +1,5 @@
 package game;
 
-import com.sun.javafx.geom.Vec3d;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import user.User;
@@ -16,8 +15,9 @@ public class Board {
     private Cell cells[][] = null;
     private final Integer rowSize;
     private final Integer colSize;
-    private User users[] = new User[2];
-    private Integer whoMoves = 0, score[] = new Integer[2];
+    private final User[] users = new User[2];
+    private Integer whoMoves = 0;
+    private final Integer[] score = new Integer[2];
 
     public Board(Integer rows, Integer cols, User u1, User u2) {
         rowSize = rows;
@@ -46,7 +46,7 @@ public class Board {
         }
     }
 
-    protected  void captureObligatory(User user, Integer row, Integer col) {
+    void captureObligatory(User user, Integer row, Integer col) {
         if (cells[row][col].getOwner() != user && cells[row][col].getOwner() != null) {
             score[1-whoMoves]--;
         }
@@ -84,16 +84,15 @@ public class Board {
         return score[index];
     }
 
-    protected void unvisitAll() {
+    void unmarkAll() {
         for(int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
-                cells[i][j].unvisit();
                 cells[i][j].unmark();
             }
         }
     }
 
-    protected void findCycles(Integer row, Integer col, User user) {
+    void findCycles(Integer row, Integer col, User user) {
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
                 if (row+i>=0 && row+i<rowSize &&
@@ -106,12 +105,13 @@ public class Board {
 
     }
 
-    protected void tryInsideCycle(Integer row, Integer col, User user) {
+    @SuppressWarnings("unchecked")
+    void tryInsideCycle(Integer row, Integer col, User user) {
         Stack<Pair<Integer, Integer>> toVisit = new Stack<>(), toCapture = new Stack<>();
         int curRow, curCol;
         Pair<Integer, Integer> current;
         Boolean finish = false;
-        unvisitAll();
+        unmarkAll();
 
         toVisit.push(new Pair(row, col));
         toCapture.add(new Pair(row, col));
@@ -146,21 +146,23 @@ public class Board {
         }
     }
 
-    protected Boolean insider(Integer row, Integer col, User user) {
-        Integer counter = 0;
-        for(int i = -1; i <= 1; i++) {
-            for(int j = -1; j <= 1; j++) {
-                if (row+i>=0 && row+i<rowSize &&
-                        col+j >= 0 && col+j < colSize &&
-                        !(i==0 && j==0) && cells[i][j].hasOwner()) {
-                    counter++;
-                }
-            }
-        }
-        // Если все 8 окружающих ячеек захвачены текущим ходящим юзером,
-        // то мы попали во внутреннюю область
-        return counter == 8;
-    }
+// --Commented out by Inspection START (05.05.15 21:44):
+//    protected Boolean insider(Integer row, Integer col, User user) {
+//        Integer counter = 0;
+//        for(int i = -1; i <= 1; i++) {
+//            for(int j = -1; j <= 1; j++) {
+//                if (row+i>=0 && row+i<rowSize &&
+//                        col+j >= 0 && col+j < colSize &&
+//                        !(i==0 && j==0) && cells[i][j].hasOwner()) {
+//                    counter++;
+//                }
+//            }
+//        }
+//        // Если все 8 окружающих ячеек захвачены текущим ходящим юзером,
+//        // то мы попали во внутреннюю область
+//        return counter == 8;
+//    }
+// --Commented out by Inspection STOP (05.05.15 21:44)
 
     public User getOwner(Integer row, Integer col) {
         if(row<0 || row>=rowSize || col<0 || col>=colSize)
