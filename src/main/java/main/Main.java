@@ -21,7 +21,7 @@ import javax.servlet.Servlet;
 
 class Main {
     public static void main(String[] args) throws Exception {
-        int port = 8080;
+        int port = ((ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml")).getDefaultPort();
         if(args.length > 0) {
             port = Integer.parseInt(args[0]);
         }

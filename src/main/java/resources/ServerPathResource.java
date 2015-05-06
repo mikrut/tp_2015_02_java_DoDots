@@ -14,6 +14,7 @@ public class ServerPathResource implements Resource {
     private String adminInfoUrl;
     private String webSocketUrl;
     private String staticDir;
+    private Integer defaultPort;
 
     public String getSigninUrl() {
         return signinUrl;
@@ -41,5 +42,9 @@ public class ServerPathResource implements Resource {
 
     public String getStaticDir() {
         return staticDir;
+    }
+
+    public Integer getDefaultPort() {
+        return defaultPort;
     }
 }
