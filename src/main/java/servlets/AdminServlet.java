@@ -2,7 +2,7 @@ package servlets;
 
 import org.eclipse.jetty.server.Server;
 import user.AccountManager;
-import user.User;
+import database.User;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

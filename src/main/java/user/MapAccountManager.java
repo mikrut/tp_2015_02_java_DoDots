@@ -5,6 +5,7 @@ package user;
  * 01.03.2015 9:15
  * Package: ${PACKAGE_NAME}
  */
+import database.User;
 import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;

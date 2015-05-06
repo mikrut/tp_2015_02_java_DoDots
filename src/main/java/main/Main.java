@@ -5,6 +5,7 @@
  */
 package main;
 
+import database.DAManager;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -26,10 +27,8 @@ class Main {
             port = Integer.parseInt(args[0]);
         }
 
-        DAManager data_manager = new DAManager();
-
         Server server = new Server(port);
-        AccountManager mgr = data_manager.getAccountManager();
+        AccountManager mgr = new DBAccountManager();
 
         Servlet register = new RegisterServlet(mgr);
         Servlet login = new LoginServlet(mgr);

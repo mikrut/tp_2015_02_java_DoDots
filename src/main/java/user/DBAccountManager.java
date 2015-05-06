@@ -1,43 +1,44 @@
 package user;
 
-import org.hibernate.*;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import database.DAManager;
+import database.User;
+import database.UserDAO;
 import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by mihanik
- * 19.04.15 14:53
+ * 06.05.15 20:30
  * Package: user
  */
-
-public class DAOAccountManager implements AccountManager {
+public class DBAccountManager implements AccountManager {
     private final Map<String, User> loggedInList = new HashMap<>();
     private AccountManagerResource resource = null;
     private ResponseResource responseResource = null;
-    private final SessionFactory sessionFactory;
+    private UserDAO dao;
 
-    public DAOAccountManager(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public DBAccountManager() {
+        this(DAManager.getSingleton().getUserDAO());
+    }
 
+    public DBAccountManager(UserDAO db) {
+        dao = db;
         resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
         responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
 
-        User admin = findUser(resource.getAdminName());
+        User admin = dao.findUser(resource.getAdminName());
         if(admin == null) {
             registerUser(resource.getAdminName(),
                     resource.getAdminPassword(),
                     resource.getAdminEmail());
-            admin = findUser(resource.getAdminName());
+            admin = dao.findUser(resource.getAdminName());
             admin.setStatus(User.Rights.ADMIN);
-            saveUser(admin);
+            dao.saveUser(admin);
         }
     }
 
@@ -47,26 +48,18 @@ public class DAOAccountManager implements AccountManager {
 
     @SuppressWarnings("unchecked")
     public JSONObject registerUser(String username, String password, String email, String session) {
-        Session registerSession = sessionFactory.openSession();
         JSONObject response = new JSONObject();
 
         if(username==null || password == null || email == null) {
             response.put(responseResource.getStatus(), responseResource.getError());
             response.put(responseResource.getMessage(), resource.getNullQueryAnswer());
         } else {
-            User usr = (User) registerSession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+            User usr = dao.findUser(username);
 
             if (usr == null) {
                 usr = new User(username, password, email, null);
 
-                Transaction transaction = registerSession.beginTransaction();
-                registerSession.save(usr);
-                transaction.commit();
-
-                // usr = findUser(username);
-                // We don't check authable after registration because we think that our class works as needed.
-                // String authableMessage = checkAuthable(username, password);
-
+                dao.saveUser(usr);
                 if (session != null) {
                     authenticate(session, username, password);
                 }
@@ -78,83 +71,45 @@ public class DAOAccountManager implements AccountManager {
                 response.put(responseResource.getMessage(), resource.getUserAlreadyExists());
             }
         }
-        registerSession.close();
 
         return response;
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, User> getAllRegistered() {
-        Session searchSession = sessionFactory.openSession();
-        Criteria criteria = searchSession.createCriteria(User.class);
-        List<User> users = criteria.list();
-        Map<String, User> usersMap = new HashMap<>();
-        for(User user:users) {
-            usersMap.put(user.getUsername(), user);
-        }
-        searchSession.close();
-        return usersMap;
+        return dao.getAllRegistered();
     }
 
-    public void saveUser(User user) {
-        deleteUser(user.getUsername());
-
-        Session saveSession = sessionFactory.openSession();
-        saveSession.save(user);
-        saveSession.close();
-    }
-
+    @Override
     public void deleteUser(String username) {
-        for(Map.Entry<String,User> record : loggedInList.entrySet())
-            if(record.getValue().getUsername().equals(username))
-                logout(record.getKey());
-
-        Session deleteSession = sessionFactory.openSession();
-        Transaction transaction = deleteSession.beginTransaction();
-
-        User usr = (User) deleteSession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
-        if(usr != null)
-            deleteSession.delete(usr);
-
-        transaction.commit();
-        deleteSession.close();
+        dao.deleteUser(username);
     }
 
+    @Override
     public Integer getUserCount() {
-        Session querySession = sessionFactory.openSession();
-        Integer count = ((Long) querySession.createCriteria(User.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
-        querySession.close();
-        return count;
+        return dao.getUserCount();
     }
 
     public Integer getSessionCount() {
         return loggedInList.size();
     }
 
-    public void incScore(User usr, Integer score) {
-        Session scoreSession = sessionFactory.openSession();
-        Transaction transaction = scoreSession.beginTransaction();
-
-        User myUser = (User) scoreSession.get(User.class, usr.getID());
-        myUser.incScore(score);
-        scoreSession.save(myUser);
-
-        transaction.commit();
-        scoreSession.close();
+    public User findUser(String name) {
+        return dao.findUser(name);
     }
 
-    public User findUser(String username) {
-        Session querySession = sessionFactory.openSession();
-        Transaction transaction = querySession.beginTransaction();
-        User usr = (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
-        transaction.commit();
-        querySession.close();
+    public User changeEmail(String name, String email) {
+        User usr = dao.findUser(name);
+        if (usr != null) {
+            usr.setEmail(email);
+            dao.saveUser(usr);
+            usr = dao.findUser(name);
+        }
         return usr;
     }
 
     @SuppressWarnings("unchecked")
     public JSONObject authenticate(String sessionId, String username, String password) {
-        User usr = findUser(username);
+        User usr = dao.findUser(username);
         JSONObject response = new JSONObject();
 
         if(usr != null){
@@ -174,7 +129,7 @@ public class DAOAccountManager implements AccountManager {
     }
 
     public String checkAuthable(String username, String password) {
-        User usr = findUser(username);
+        User usr = dao.findUser(username);
 
         if(usr == null)
             return resource.getUserNotFound();
@@ -191,7 +146,7 @@ public class DAOAccountManager implements AccountManager {
     public User getAuthenticated(String sessionId) {
         if (loggedInList.containsKey(sessionId)) {
             User usr = loggedInList.get(sessionId);
-            loggedInList.put(sessionId, findUser(usr.getUsername()));
+            loggedInList.put(sessionId, dao.findUser(usr.getUsername()));
         }
         return loggedInList.get(sessionId);
     }

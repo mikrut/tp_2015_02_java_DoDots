@@ -1,7 +1,7 @@
 package game;
 
 import junit.framework.TestCase;
-import user.User;
+import database.User;
 
 public class BoardTest extends TestCase {
     private final User user = new User("admin", "admin", "admin", (long) 1);

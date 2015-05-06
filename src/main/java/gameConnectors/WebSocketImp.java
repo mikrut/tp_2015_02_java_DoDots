@@ -1,7 +1,7 @@
 package gameConnectors;
 
 import org.eclipse.jetty.websocket.api.Session;
-import user.User;
+import database.User;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;

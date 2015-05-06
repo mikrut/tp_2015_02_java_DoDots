@@ -3,8 +3,8 @@ package servlets;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.AccountManager;
-import user.GameResults;
-import user.User;
+import database.GameResults;
+import database.User;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

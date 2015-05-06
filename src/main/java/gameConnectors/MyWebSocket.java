@@ -1,7 +1,7 @@
 package gameConnectors;
 
 import org.eclipse.jetty.websocket.api.Session;
-import user.User;
+import database.User;
 
 /**
  * Created by mihanik

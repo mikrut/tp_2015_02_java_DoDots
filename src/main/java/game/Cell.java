@@ -1,6 +1,6 @@
 package game;
 
-import user.User;
+import database.User;
 
 /**
  * Created by mihanik

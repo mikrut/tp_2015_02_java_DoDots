@@ -1,4 +1,4 @@
-package user;
+package database;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

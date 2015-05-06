@@ -1,4 +1,4 @@
-package user;
+package database;
 
 import javax.persistence.*;
 import java.io.Serializable;

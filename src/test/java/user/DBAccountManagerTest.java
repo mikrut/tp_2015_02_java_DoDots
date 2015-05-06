@@ -1,5 +1,9 @@
 package user;
 
+import database.DAOGameResults;
+import database.GameResults;
+import database.User;
+import database.UserDAO;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -10,14 +14,12 @@ import resources.AccountManagerResource;
 import resources.DBResource;
 import resources.ResourceProvider;
 
-
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
-public class DAOGameResultsTest {
-    private DAOGameResults gr;
-    private DAOAccountManager manager;
-
-    private AccountManagerResource accountManagerResource;
+public class DBAccountManagerTest {
+    private DBAccountManager manager;
 
     @Before
     public void initialize() {
@@ -28,7 +30,6 @@ public class DAOGameResultsTest {
         configuration.addAnnotatedClass(GameResults.class);
 
         DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
-        accountManagerResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
 
         configuration.setProperty("hibernate.dialect",                 resource.getDbDialect());
         configuration.setProperty("hibernate.connection.driver_class", resource.getDbDriverClassName());
@@ -45,36 +46,50 @@ public class DAOGameResultsTest {
 
         SessionFactory factory = configuration.buildSessionFactory(registry);
 
-        gr = new DAOGameResults(factory);
-        manager = new DAOAccountManager(factory);
+        UserDAO dao = new UserDAO(factory);
 
         System.out.println("Configuration complete");
+        manager = new DBAccountManager(dao);
     }
 
     @Test
-    public void testSaveResults() {
-        User user1, user2;
-        String adminName = accountManagerResource.getAdminName();
-        user1 = user2 = manager.findUser(adminName);
+    public void testSigninUser() throws Exception {
+        System.out.println("Testing signin");
 
-        int beforeCount = user1.getGameResults().size();
-        gr.addResult(user1, 10, user2, 20);
-        user1 = manager.findUser(adminName);
-        assertEquals("Expected count of results to be greater by one after adding result",
-                beforeCount+1, user1.getGameResults().size());
+        manager.deleteUser("username");
+        manager.registerUser("username", "userpassword", "email");
+        User usr = manager.findUser("username");
+        assertNotNull("Expected to get registered user. Got nothing.", usr);
+        manager.deleteUser(usr.getUsername());
     }
 
     @Test
-    public void testGameResultsUpdate() {
-        User user1;
-        String sessionid = "sessionid";
-        String adminName = accountManagerResource.getAdminName();
-        manager.authenticate(sessionid, adminName, accountManagerResource.getAdminPassword());
-        user1 = manager.getAuthenticated(sessionid);
-        int beforeCount = user1.getGameResults().size();
-        gr.addResult(user1, 10, user1, 20);
-        user1 = manager.getAuthenticated(sessionid);
-        assertEquals("Expected count of results to be greater by one after adding result",
-                beforeCount+1, user1.getGameResults().size());
+    public void testPersistantSignin() throws Exception {
+        manager.deleteUser("username");
+
+        manager.registerUser("username", "userpassword", "email");
+        User usr = manager.findUser("username");
+        assertNotNull("Expected to get registered user. Got nothing.", usr);
+        manager.deleteUser(usr.getUsername());
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception {
+        System.out.println("Testing deletion");
+
+        manager.deleteUser("username");
+        manager.registerUser("username", "userpassword", "email");
+        manager.deleteUser("username");
+        User usr = manager.findUser("username");
+        assertNull("Expected to get nothing because of user deleted. But got user!", usr);
+    }
+
+    @Test
+    public void testSaveUser() throws Exception {
+        manager.deleteUser("username");
+        manager.registerUser("username", "userpassword", "email@yandex.ru");
+        User usr = manager.changeEmail("username", "new_email@mail.ru");
+        assertEquals("Expected email to change from email@yandex.ru to new_email@mail.ru", usr.getEmail(), "new_email@mail.ru");
+        manager.deleteUser(usr.getUsername());
     }
 }

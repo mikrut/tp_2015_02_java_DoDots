@@ -1,4 +1,4 @@
-package user;
+package database;
 
 /**
  * Created by Михаил
@@ -46,6 +46,10 @@ public class User implements Serializable {
     public User(User usr) {
         this(usr.getUsername(), "something", usr.getEmail(), usr.getID(), usr.getStatus());
         passHash = usr.passHash;
+    }
+
+    public User(String username, String password, String email) {
+        this(username, password, email, null, Rights.BASIC);
     }
 
     public User(String username, String password, String email, Long uid) {

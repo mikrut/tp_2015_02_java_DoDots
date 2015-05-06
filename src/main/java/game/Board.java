@@ -2,7 +2,7 @@ package game;
 
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
-import user.User;
+import database.User;
 
 import java.util.Stack;
 

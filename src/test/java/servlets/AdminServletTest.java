@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import user.AccountManager;
 import user.MapAccountManager;
-import user.User;
+import database.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

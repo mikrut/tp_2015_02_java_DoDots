@@ -4,7 +4,7 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import user.AccountManager;
-import user.User;
+import database.User;
 
 /**
  * Created by mihanik

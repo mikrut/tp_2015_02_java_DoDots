@@ -1,4 +1,4 @@
-package user;
+package database;
 
 import junit.framework.TestCase;
 import org.hibernate.SessionFactory;
@@ -14,8 +14,8 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
-public class DAOAccountManagerTest {
-    private static DAOAccountManager manager;
+public class UserDAOTest {
+    private static UserDAO manager;
 
     @BeforeClass
     public static void initialize() {
@@ -42,7 +42,7 @@ public class DAOAccountManagerTest {
 
         SessionFactory factory = configuration.buildSessionFactory(registry);
 
-        manager = new DAOAccountManager(factory);
+        manager = new UserDAO(factory);
 
         System.out.println("Configuration complete");
     }
@@ -54,56 +54,12 @@ public class DAOAccountManagerTest {
         assertNotNull("Expected to find admin in db! Found nothing!", admin);
     }
 
-
-    @Test
-    public void testSigninUser() throws Exception {
-        System.out.println("Testing signin");
-
-        manager.deleteUser("username");
-        manager.registerUser("username", "userpassword", "email");
-        User usr = manager.findUser("username");
-        assertNotNull("Expected to get registered user. Got nothing.", usr);
-        manager.deleteUser(usr.getUsername());
-    }
-
-    @Test
-    public void testPersistantSignin() throws Exception {
-        manager.deleteUser("username");
-
-        manager.registerUser("username", "userpassword", "email");
-        User usr = manager.findUser("username");
-        assertNotNull("Expected to get registered user. Got nothing.", usr);
-        manager.deleteUser(usr.getUsername());
-    }
-
-    @Test
-    public void testDeleteUser() throws Exception {
-        System.out.println("Testing deletion");
-
-        manager.deleteUser("username");
-        manager.registerUser("username", "userpassword", "email");
-        manager.deleteUser("username");
-        User usr = manager.findUser("username");
-        assertNull("Expected to get nothing because of user deleted. But got user!", usr);
-    }
-
-    @Test
-    public void testSaveUser() throws Exception {
-        manager.deleteUser("username");
-        manager.registerUser("username", "userpassword", "email@yandex.ru");
-        User usr = manager.findUser("username");
-        usr.setEmail("new_email@mail.ru");
-        manager.saveUser(usr);
-        usr = manager.findUser(usr.getUsername());
-        assertEquals("Expected email to change from email@yandex.ru to new_email@mail.ru", usr.getEmail(), "new_email@mail.ru");
-        manager.deleteUser(usr.getUsername());
-    }
-
     @Test
     public void testIncScore() throws Exception {
         manager.deleteUser("username");
-        manager.registerUser("username", "userpassword", "email@yandex.ru");
-        User usr = manager.findUser("username");
+        User usr = new User("username", "userpassword", "email@yandex.ru");
+        manager.saveUser(usr);
+        usr = manager.findUser("username");
         int score1 = usr.getScore();
         int inc = 10;
         manager.incScore(usr, inc);
