@@ -1,6 +1,5 @@
 package user;
 
-import database.DAOGameResults;
 import database.GameResults;
 import database.User;
 import database.UserDAO;
@@ -10,7 +9,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.Before;
 import org.junit.Test;
-import resources.AccountManagerResource;
 import resources.DBResource;
 import resources.ResourceProvider;
 

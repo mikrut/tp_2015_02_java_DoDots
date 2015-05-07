@@ -12,8 +12,8 @@ import resources.ResourceProvider;
  * 06.05.15 20:57
  * Package: database
  */
-public abstract class CustomSessionFactory implements SessionFactory {
-    private static SessionFactory factory = createFactory();
+abstract class CustomSessionFactory implements SessionFactory {
+    private static final SessionFactory factory = createFactory();
 
     private static SessionFactory createFactory() {
         Configuration configuration = new Configuration();

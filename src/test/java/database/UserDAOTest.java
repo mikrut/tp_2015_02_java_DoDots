@@ -11,7 +11,6 @@ import resources.DBResource;
 import resources.ResourceProvider;
 
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
 public class UserDAOTest {

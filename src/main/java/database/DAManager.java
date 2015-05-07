@@ -1,13 +1,5 @@
 package database;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import resources.DBResource;
-import resources.ResourceProvider;
-import user.AccountManager;
-
 /**
  * Created by mihanik
  * 23.04.15 10:56

@@ -52,7 +52,7 @@ public class MapAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
-    public User findUser(String username) {
+    User findUser(String username) {
         return registeredList.getOrDefault(username, null);
     }
 

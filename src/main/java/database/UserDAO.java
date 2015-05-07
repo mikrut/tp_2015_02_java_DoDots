@@ -3,11 +3,8 @@ package database;
 import org.hibernate.*;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.json.simple.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
-import resources.ResponseResource;
-import user.AccountManager;
 
 import java.util.HashMap;
 import java.util.List;

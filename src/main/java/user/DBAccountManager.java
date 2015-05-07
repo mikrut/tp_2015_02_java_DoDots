@@ -20,7 +20,7 @@ public class DBAccountManager implements AccountManager {
     private final Map<String, User> loggedInList = new HashMap<>();
     private AccountManagerResource resource = null;
     private ResponseResource responseResource = null;
-    private UserDAO dao;
+    private final UserDAO dao;
 
     public DBAccountManager() {
         this(DAManager.getSingleton().getUserDAO());
@@ -93,10 +93,12 @@ public class DBAccountManager implements AccountManager {
         return loggedInList.size();
     }
 
+    @SuppressWarnings("SameParameterValue")
     public User findUser(String name) {
         return dao.findUser(name);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public User changeEmail(String name, String email) {
         User usr = dao.findUser(name);
         if (usr != null) {
