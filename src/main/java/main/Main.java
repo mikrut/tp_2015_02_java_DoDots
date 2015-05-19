@@ -30,11 +30,11 @@ class Main {
         AccountManager mgr = new DBAccountManager();
 
         Servlet register = new RegisterServlet(mgr);
-        Servlet login = new LoginServlet(mgr);
-        Servlet logout = new LogoutServlet(mgr);
+        Servlet login    = new LoginServlet(mgr);
+        Servlet logout   = new LogoutServlet(mgr);
         Servlet userInfo = new UserInfoServlet(mgr);
-        Servlet admin = new AdminServlet(server, mgr);
-        Servlet game = new WebSocketGameServlet(mgr);
+        Servlet admin    = new AdminServlet(server, mgr);
+        Servlet game     = new WebSocketGameServlet(mgr);
 
         ServerPathResource paths = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
 

@@ -18,7 +18,6 @@ public class ClickGameImp implements  Game{
     private final Board board;
     private ResponseResource responseResource = null;
     private GameInfoResource setup = null;
-    private boolean gameEnd = false;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final MyWebSocket sock1;
@@ -40,7 +39,7 @@ public class ClickGameImp implements  Game{
         response.put(responseResource.getMessage(), setup.getGameStartMessage());
         response.put(setup.getFirstPlayerFieldCall(), true);
         sock1.sendMessage(response.toJSONString());
-        board = new Board(setup.getBoardSizeX(), setup.getBoardSizeY(), sock1.getClient(), sock2.getClient());
+        board = new Board(setup.getBoardSizeX(), setup.getBoardSizeY());
         response.put(setup.getFirstPlayerFieldCall(), false);
         sock2.sendMessage(response.toJSONString());
     }
@@ -57,7 +56,7 @@ public class ClickGameImp implements  Game{
             obj = new JSONObject();
         }
 
-        if (!gameEnd) {
+        if (!board.isOver()) {
             if (!obj.containsKey("row") || !obj.containsKey("col")) {
                 obj = new JSONObject();
                 obj.put(responseResource.getStatus(), responseResource.getError());
@@ -66,20 +65,18 @@ public class ClickGameImp implements  Game{
                 Integer row = Integer.parseInt(obj.get("row").toString());
                 Integer col = Integer.parseInt(obj.get("col").toString());
 
-                if (board.capture(sockFrom.getClient(), row, col)) {
+                if (board.capture(sockFrom == sock1 ? 0 : 1, row, col)) {
                     obj.put(responseResource.getStatus(), responseResource.getOk());
                     obj.put(responseResource.getMessage(), setup.getCommandAcceptedMessage());
 
-                    score1 = board.getScore(0);
-                    score2 = board.getScore(1);
-                    if (score1 + score2 == setup.getBoardSizeX() * setup.getBoardSizeY()) {
+                    if (board.isOver()) {
+                        score1 = board.getScore(0);
+                        score2 = board.getScore(1);
                         DAManager.getSingleton().getUserDAO().incScore(sock1.getClient(), score1);
                         DAManager.getSingleton().getUserDAO().incScore(sock2.getClient(), score2);
 
                         DAManager.getSingleton().getGameResultsDAO().addResult(sock1.getClient(), score1.longValue(),
                                                                             sock2.getClient(), score2.longValue());
-
-                        gameEnd = true;
                     }
 
                 } else {
@@ -92,14 +89,14 @@ public class ClickGameImp implements  Game{
             obj.put(responseResource.getStatus(), setup.getGameEndStatus());
             obj.put(responseResource.getMessage(), setup.getGameEndMessage());
         }
-        obj.put(setup.getBoardCall(), board.toJSONArray(sockFrom.getClient()));
+        obj.put(setup.getBoardCall(), board.toJSONArray());
         obj.put(setup.getWhoMovesCall(), board.getWhoMoves());
 
         JSONArray score = new JSONArray();
         score.add(0, score1);
         score.add(1, score2);
-        obj.put(setup.getScoreCall(), score);
-        obj.put(setup.getGameEndCall(), gameEnd);
+        obj.put(setup.getScoreCall(),  score);
+        obj.put(setup.getGameEndCall(), board.isOver());
         sock1.sendMessage(obj.toJSONString());
         sock2.sendMessage(obj.toJSONString());
     }
