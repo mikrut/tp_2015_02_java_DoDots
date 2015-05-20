@@ -8,4 +8,5 @@ package gameConnectors;
 interface Game {
     public void dispatchMessage(MyWebSocket sockFrom, String message);
     public void informClosed(MyWebSocket sockFrom);
+    public void replace(MyWebSocket replaced, MyWebSocket newSock);
 }

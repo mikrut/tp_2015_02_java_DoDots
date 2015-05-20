@@ -19,6 +19,13 @@ public class ChatGameImp implements Game {
         this.sock2.sendMessage("Connection open");
     }
 
+    public synchronized void replace(MyWebSocket replaced, MyWebSocket newSock) {
+        if (sock1 == replaced)
+            sock1 = newSock;
+        if (sock2 == replaced)
+            sock2 = newSock;
+    }
+
     @Override
     public void dispatchMessage(MyWebSocket sockFrom, String message) {
         if(sockFrom == sock1)

@@ -17,6 +17,7 @@ public class GameInfoResource implements Resource {
     private String gameStartMessage;
     private String gameEndStatus;
     private String gameEndMessage;
+    private String infoMessage;
     private String firstPlayerFieldCall;
     private String whoMovesCall;
 
@@ -42,6 +43,7 @@ public class GameInfoResource implements Resource {
         return gameEndCall;
     }
 
+    public String getInfoMessage() {return infoMessage;}
 
     public String getConnectCloseStatus() {
         return connectCloseStatus;

@@ -65,11 +65,28 @@ public class WebSocketImp implements MyWebSocket {
             game.informClosed(this);
     }
 
+    public void close() {
+        session.close();
+        if (provider != null)
+            provider.informClosed(this);
+        if (game != null)
+            game.informClosed(this);
+        provider = null;
+        game     = null;
+    }
+
+
+
     @Override
     public void setGame(Game game) {
         this.game = game;
         if(client == null && session != null)
             session.close();
+    }
+
+    @Override
+    public Game getGame() {
+        return game;
     }
 
     @Override

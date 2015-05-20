@@ -19,10 +19,16 @@ public class ClickGameImp implements  Game{
     private ResponseResource responseResource = null;
     private GameInfoResource setup = null;
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private final MyWebSocket sock1;
-    @SuppressWarnings("FieldCanBeLocal")
-    private final MyWebSocket sock2;
+    private MyWebSocket sock1;
+    private MyWebSocket sock2;
+
+    public MyWebSocket getSock1() {
+        return sock1;
+    }
+
+    public MyWebSocket getSock2() {
+        return sock2;
+    }
 
     @SuppressWarnings("unchecked")
     public ClickGameImp(MyWebSocket sock1, MyWebSocket sock2) {
@@ -44,13 +50,41 @@ public class ClickGameImp implements  Game{
         sock2.sendMessage(response.toJSONString());
     }
 
+    public synchronized void replace(MyWebSocket replaced, MyWebSocket newSock) {
+        if (sock1 == replaced)
+            sock1 = newSock;
+        if (sock2 == replaced)
+            sock2 = newSock;
+        JSONObject obj = new JSONObject();
+        obj.put(responseResource.getStatus(), responseResource.getOk());
+        obj.put(responseResource.getMessage(), setup.getInfoMessage());
+        generateStatus(obj);
+
+        sock1.sendMessage(obj.toJSONString());
+        sock2.sendMessage(obj.toJSONString());
+    }
+
+    private void generateStatus(JSONObject writer) {
+        int score1 = board.getScore(0);
+        int score2 = board.getScore(1);
+
+        writer.put(setup.getBoardCall(), board.toJSONArray());
+        writer.put(setup.getWhoMovesCall(), board.getWhoMoves());
+
+        JSONArray score = new JSONArray();
+        score.add(0, score1);
+        score.add(1, score2);
+        writer.put(setup.getScoreCall(), score);
+        writer.put(setup.getGameEndCall(), board.isOver());
+    }
+
 
     @Override
     @SuppressWarnings("unchecked")
-    public void dispatchMessage(MyWebSocket sockFrom, String message) {
+    public synchronized void dispatchMessage(MyWebSocket sockFrom, String message) {
         JSONObject obj = (JSONObject) JSONValue.parse(message);
-        Integer score1 = board.getScore(0);
-        Integer score2 = board.getScore(1);
+        Integer score1;
+        Integer score2;
 
         if (obj == null) {
             obj = new JSONObject();
@@ -89,24 +123,27 @@ public class ClickGameImp implements  Game{
             obj.put(responseResource.getStatus(), setup.getGameEndStatus());
             obj.put(responseResource.getMessage(), setup.getGameEndMessage());
         }
-        obj.put(setup.getBoardCall(), board.toJSONArray());
-        obj.put(setup.getWhoMovesCall(), board.getWhoMoves());
+        generateStatus(obj);
 
-        JSONArray score = new JSONArray();
-        score.add(0, score1);
-        score.add(1, score2);
-        obj.put(setup.getScoreCall(),  score);
-        obj.put(setup.getGameEndCall(), board.isOver());
         sock1.sendMessage(obj.toJSONString());
         sock2.sendMessage(obj.toJSONString());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void informClosed(MyWebSocket sockFrom) {
+    public synchronized void informClosed(MyWebSocket sockFrom) {
         JSONObject obj = new JSONObject();
-        obj.put(responseResource.getStatus(), setup.getConnectCloseStatus());
-        obj.put(responseResource.getMessage(), setup.getConnectCloseMessage());
-        sockFrom.sendMessage(obj.toJSONString());
+        MyWebSocket sockTo;
+        if (sockFrom == sock1)
+            sockTo = sock2;
+        else
+            sockTo = sock1;
+        sock1 = sock2 = null;
+        if (sockTo != null) {
+            obj.put(responseResource.getStatus(), setup.getConnectCloseStatus());
+            obj.put(responseResource.getMessage(), setup.getConnectCloseMessage());
+            sockTo.sendMessage(obj.toJSONString());
+            sockTo.close();
+        }
     }
 }

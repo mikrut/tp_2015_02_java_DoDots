@@ -7,4 +7,5 @@ package gameConnectors;
  */
 interface GameProvider {
     public void addWebSocket(MyWebSocket sock);
+    public void informClosed(MyWebSocket sock);
 }
