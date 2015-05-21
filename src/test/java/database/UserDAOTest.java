@@ -16,8 +16,16 @@ import static junit.framework.TestCase.assertEquals;
 public class UserDAOTest {
     private static UserDAO manager;
 
-    @BeforeClass
-    public static void initialize() {
+    public static UserDAO getTestDAO() {
+        DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
+        return getTestDAO(resource.getShowSql().equals("true"));
+    }
+
+    public static UserDAO getTestDAO(Boolean doLog) {
+        return new UserDAO(getFactory(doLog));
+    }
+
+    public static SessionFactory getFactory(Boolean doLog) {
         System.out.println("configuring database");
 
         Configuration configuration = new Configuration();
@@ -31,7 +39,7 @@ public class UserDAOTest {
         configuration.setProperty("hibernate.connection.url",          resource.getDbURL()+resource.getDbTestName());
         configuration.setProperty("hibernate.connection.username",     resource.getDbUser());
         configuration.setProperty("hibernate.connection.password",     resource.getDbPassword());
-        configuration.setProperty("hibernate.show_sql",                resource.getShowSql());
+        configuration.setProperty("hibernate.show_sql",                doLog.toString());
         configuration.setProperty("hibernate.hbm2ddl.auto",            "create");
         configuration.setProperty("hibernate.flushMode",               resource.getFlushMode());
 
@@ -39,10 +47,12 @@ public class UserDAOTest {
         builder.applySettings(configuration.getProperties());
         ServiceRegistry registry = builder.build();
 
-        SessionFactory factory = configuration.buildSessionFactory(registry);
+        return  configuration.buildSessionFactory(registry);
+    }
 
-        manager = new UserDAO(factory);
-
+    @BeforeClass
+    public static void initialize() {
+        manager = getTestDAO();
         System.out.println("Configuration complete");
     }
 

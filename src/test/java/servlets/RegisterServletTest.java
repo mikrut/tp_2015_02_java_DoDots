@@ -1,7 +1,6 @@
 package servlets;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONObject;
 import org.junit.Test;
 import user.AccountManager;
 import user.MapAccountManager;
@@ -67,13 +66,13 @@ public class RegisterServletTest {
     }
 
     void validateResponse(String response, String expected) {
-        JSONObject obj = (JSONObject) JSONValue.parse(response);
+        JSONObject obj = new JSONObject(response);
         if(obj != null) {
-            if(obj.containsKey("status") && obj.containsKey("message")) {
+            if(obj.has("status") && obj.has("message")) {
                 assertEquals("Expected \""+expected+"\" status", expected, obj.get("status"));
             } else {
-                assertTrue("Expected response to contain status string. Got only: "+response, obj.containsKey("status"));
-                assertTrue("Expected response to contain message string. Got only: "+response, obj.containsKey("message"));
+                assertTrue("Expected response to contain status string. Got only: "+response, obj.has("status"));
+                assertTrue("Expected response to contain message string. Got only: "+response, obj.has("message"));
             }
         } else {
             assertTrue("Expected response to be valid. But got: "+response, false);

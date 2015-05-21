@@ -1,9 +1,8 @@
 package servlets;
 
 import org.eclipse.jetty.server.Server;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,25 +80,25 @@ public class AdminServletTest {
     @Test
     public void testGetValidity() throws Exception {
         adminPage.doGet(request, response);
-        JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
+        JSONObject obj = new JSONObject(writer.toString());
         assertTrue("Expected response to be valid. But got: " + response, obj != null);
     }
 
     @Test
     public void testResponseConsistence() throws Exception {
         adminPage.doGet(request, response);
-        JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
-        assertTrue("Expected response to contain status string. Got only: " + writer.toString(), obj.containsKey("status"));
-        assertTrue("Expected response to contain users array. Got only: " + writer.toString(), obj.containsKey("users"));
+        JSONObject obj = new JSONObject(writer.toString());
+        assertTrue("Expected response to contain status string. Got only: " + writer.toString(), obj.has("status"));
+        assertTrue("Expected response to contain users array. Got only: " + writer.toString(), obj.has("users"));
         assertEquals("Expected \"OK\" status", "OK", obj.get("status"));
     }
 
     @Test
     public void testOnlyAdminOnServer() throws Exception {
         adminPage.doGet(request, response);
-        JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
+        JSONObject obj = new JSONObject(writer.toString());
         JSONArray usersArray = ((JSONArray)obj.get("users"));
-        assertEquals("Expected one user on server", 1, usersArray.size());
+        assertEquals("Expected one user on server", 1, usersArray.length());
         assertEquals("Expected user to be admin", adminUsername, ((JSONObject) usersArray.get(0)).get("username"));
     }
 
@@ -116,12 +115,12 @@ public class AdminServletTest {
         mgr.authenticate(userSession.getId(), username, password);
 
         adminPage.doGet(request, response);
-        JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
+        JSONObject obj = new JSONObject(writer.toString());
         JSONArray usersArray = ((JSONArray)obj.get("users"));
-        assertEquals("Expected two users on server", 2, usersArray.size());
+        assertEquals("Expected two users on server", 2, usersArray.length());
         boolean found = false;
         int i = 0;
-        while(!found && i<usersArray.size()) {
+        while(!found && i<usersArray.length()) {
             if(((JSONObject) usersArray.get(i)).get("username").equals(username))
                 found = true;
             i++;
@@ -143,12 +142,12 @@ public class AdminServletTest {
         mgr.authenticate(userSession.getId(), username, password);
         mgr.logout(userSession.getId());
         adminPage.doGet(request, response);
-        JSONObject obj = (JSONObject) JSONValue.parse(writer.toString());
+        JSONObject obj = new JSONObject(writer.toString());
         JSONArray usersArray = ((JSONArray)obj.get("users"));
-        assertEquals("Expected two users on server after logout", 2, usersArray.size());
+        assertEquals("Expected two users on server after logout", 2, usersArray.length());
         boolean found = false;
         int i = 0;
-        while(!found && i<usersArray.size()) {
+        while(!found && i<usersArray.length()) {
             if(((JSONObject) usersArray.get(i)).get("username").equals(adminUsername))
                 found = true;
             i++;

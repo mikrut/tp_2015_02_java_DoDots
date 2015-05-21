@@ -1,7 +1,7 @@
 package gameConnectors;
 
 import database.User;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import resources.GameProviderResource;
 import resources.ResourceProvider;
 
@@ -36,12 +36,11 @@ public class FastGameProviderImp implements GameProvider {
                 socket = sock;
                 response.put("Status", setup.getConnectSuccessStatus());
                 response.put("Message", setup.getConnectSuccessMessage());
-                sock.sendMessage(response.toJSONString());
+                sock.sendMessage(response.toString());
             } else {
                 response.put("Status", setup.getConnectSuccessStatus());
                 response.put("Message", setup.getConnectSuccessMessage());
-                sock.sendMessage(response.toJSONString());
-                response.clear();
+                sock.sendMessage(response.toString());
                 new ClickGameImp(socket, sock);
                 socket = null;
             }

@@ -1,6 +1,6 @@
 package servlets;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import user.AccountManager;
@@ -34,6 +34,6 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter(resource.getPasswordAPIName());
 
         JSONObject result = manager.authenticate(session.getId(), username, password);
-        response.getWriter().write(result.toJSONString());
+        response.getWriter().write(result.toString());
     }
 }

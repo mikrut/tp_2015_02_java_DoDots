@@ -3,7 +3,7 @@ package user;
 import database.DAManager;
 import database.User;
 import database.UserDAO;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;

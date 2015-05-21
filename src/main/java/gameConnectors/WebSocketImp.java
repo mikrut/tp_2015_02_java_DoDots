@@ -30,8 +30,7 @@ public class WebSocketImp implements MyWebSocket {
             if(session != null && session.isOpen())
                 session.getRemote().sendString(message);
         } catch (Exception e) {
-            game.informClosed(this);
-            session.close();
+            close();
             System.out.println("Error in sendMessage: " + e.toString());
         }
     }
@@ -47,10 +46,11 @@ public class WebSocketImp implements MyWebSocket {
     @OnWebSocketConnect
     public void onOpen(Session session) {
         setSession(session);
-        provider.addWebSocket(this);
+        if (provider != null)
+            provider.addWebSocket(this);
     }
 
-    void setSession(Session session) {
+    public void setSession(Session session) {
         this.session = session;
     }
 
@@ -66,13 +66,15 @@ public class WebSocketImp implements MyWebSocket {
     }
 
     public void close() {
-        session.close();
+        if (session != null)
+            session.close();
         if (provider != null)
             provider.informClosed(this);
         if (game != null)
             game.informClosed(this);
         provider = null;
         game     = null;
+        session = null;
     }
 
 
@@ -80,8 +82,8 @@ public class WebSocketImp implements MyWebSocket {
     @Override
     public void setGame(Game game) {
         this.game = game;
-        if(client == null && session != null)
-            session.close();
+        if(client == null)
+            close();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package user;
 
 import database.User;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.util.Map;
 

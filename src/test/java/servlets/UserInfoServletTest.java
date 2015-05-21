@@ -1,7 +1,6 @@
 package servlets;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONObject;
 import org.junit.Test;
 import user.AccountManager;
 import user.MapAccountManager;
@@ -69,14 +68,14 @@ public class UserInfoServletTest {
     }
 
     void validateResponse(String response, String username, Boolean isLoggeIn) {
-        JSONObject obj = (JSONObject) JSONValue.parse(response);
+        JSONObject obj = new JSONObject(response);
         if(obj != null) {
-            if(obj.containsKey("username") && obj.containsKey("loggedIn")) {
+            if(obj.has("username") && obj.has("loggedIn")) {
                 assertEquals("Expected \""+username+"\" username", username, obj.get("username"));
                 assertEquals("Expected \""+isLoggeIn.toString()+"\" loggedIn", isLoggeIn, obj.get("loggedIn"));
             } else {
-                assertTrue("Expected response to contain username string. Got only: "+response, obj.containsKey("username"));
-                assertTrue("Expected response to contain loggedIn string. Got only: "+response, obj.containsKey("loggedIn"));
+                assertTrue("Expected response to contain username string. Got only: "+response, obj.has("username"));
+                assertTrue("Expected response to contain loggedIn string. Got only: "+response, obj.has("loggedIn"));
             }
         } else {
             assertTrue("Expected response to be valid. But got: "+response, false);

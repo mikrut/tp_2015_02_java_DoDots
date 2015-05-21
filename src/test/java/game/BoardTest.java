@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class BoardTest {
     private final Board b = new Board(5, 5);
 
-    private void capture(Integer[][] array, Board board) {
+    public static void capture(Integer[][] array, Board board) {
         for(int i =0 ; i < array.length; i++)
             for (int j = 0; j < array[i].length; j++)
                 if (array[i][j] != 0)

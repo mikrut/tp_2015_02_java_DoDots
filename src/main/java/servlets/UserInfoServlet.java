@@ -1,7 +1,7 @@
 package servlets;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import user.AccountManager;
 import database.GameResults;
 import database.User;
@@ -41,7 +41,7 @@ public class UserInfoServlet extends HttpServlet {
                     resultInJSON.put("score1", result.getUser1Score());
                     resultInJSON.put("user2", result.getUser2().getUsername());
                     resultInJSON.put("score2", result.getUser2Score());
-                    results.add(resultInJSON);
+                    results.put(resultInJSON);
                 }
             }
 
@@ -55,9 +55,9 @@ public class UserInfoServlet extends HttpServlet {
             answer.put("username", "Guest");
             answer.put("email",    "none");
             answer.put("score",    0);
-            answer.put("results", null);
+            answer.put("results",  (Object) null);
         }
 
-        response.getWriter().write(answer.toJSONString());
+        response.getWriter().write(answer.toString());
     }
 }

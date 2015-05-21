@@ -6,7 +6,7 @@ package user;
  * Package: ${PACKAGE_NAME}
  */
 import database.User;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;

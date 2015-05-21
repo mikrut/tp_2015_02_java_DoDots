@@ -1,6 +1,6 @@
 package user;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

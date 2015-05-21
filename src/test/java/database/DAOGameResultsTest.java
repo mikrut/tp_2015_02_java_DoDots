@@ -21,34 +21,11 @@ public class DAOGameResultsTest {
 
     @Before
     public void initialize() {
-        System.out.println("configuring database");
-
-        Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(User.class);
-        configuration.addAnnotatedClass(GameResults.class);
-
-        DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
         accountManagerResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
-
-        configuration.setProperty("hibernate.dialect",                 resource.getDbDialect());
-        configuration.setProperty("hibernate.connection.driver_class", resource.getDbDriverClassName());
-        configuration.setProperty("hibernate.connection.url",          resource.getDbURL()+ resource.getDbTestName());
-        configuration.setProperty("hibernate.connection.username",     resource.getDbUser());
-        configuration.setProperty("hibernate.connection.password",     resource.getDbPassword());
-        configuration.setProperty("hibernate.show_sql",                resource.getShowSql());
-        configuration.setProperty("hibernate.hbm2ddl.auto",            "create");
-        configuration.setProperty("hibernate.flushMode",               resource.getFlushMode());
-
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
-        builder.applySettings(configuration.getProperties());
-        ServiceRegistry registry = builder.build();
-
-        SessionFactory factory = configuration.buildSessionFactory(registry);
+        SessionFactory factory = UserDAOTest.getFactory(false);
 
         gr = new DAOGameResults(factory);
         manager = new UserDAO(factory);
-
-        System.out.println("Configuration complete");
     }
 
     @Test

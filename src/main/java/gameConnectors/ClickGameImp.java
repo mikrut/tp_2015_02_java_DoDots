@@ -1,9 +1,8 @@
 package gameConnectors;
 
 import game.Board;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import resources.GameInfoResource;
 import resources.ResourceProvider;
 import resources.ResponseResource;
@@ -44,10 +43,10 @@ public class ClickGameImp implements  Game{
         response.put(responseResource.getStatus(), setup.getGameStartStatus());
         response.put(responseResource.getMessage(), setup.getGameStartMessage());
         response.put(setup.getFirstPlayerFieldCall(), true);
-        sock1.sendMessage(response.toJSONString());
+        sock1.sendMessage(response.toString());
         board = new Board(setup.getBoardSizeX(), setup.getBoardSizeY());
         response.put(setup.getFirstPlayerFieldCall(), false);
-        sock2.sendMessage(response.toJSONString());
+        sock2.sendMessage(response.toString());
     }
 
     public synchronized void replace(MyWebSocket replaced, MyWebSocket newSock) {
@@ -60,8 +59,8 @@ public class ClickGameImp implements  Game{
         obj.put(responseResource.getMessage(), setup.getInfoMessage());
         generateStatus(obj);
 
-        sock1.sendMessage(obj.toJSONString());
-        sock2.sendMessage(obj.toJSONString());
+        sock1.sendMessage(obj.toString());
+        sock2.sendMessage(obj.toString());
     }
 
     private void generateStatus(JSONObject writer) {
@@ -72,8 +71,8 @@ public class ClickGameImp implements  Game{
         writer.put(setup.getWhoMovesCall(), board.getWhoMoves());
 
         JSONArray score = new JSONArray();
-        score.add(0, score1);
-        score.add(1, score2);
+        score.put(0, score1);
+        score.put(1, score2);
         writer.put(setup.getScoreCall(), score);
         writer.put(setup.getGameEndCall(), board.isOver());
     }
@@ -82,7 +81,7 @@ public class ClickGameImp implements  Game{
     @Override
     @SuppressWarnings("unchecked")
     public synchronized void dispatchMessage(MyWebSocket sockFrom, String message) {
-        JSONObject obj = (JSONObject) JSONValue.parse(message);
+        JSONObject obj = new JSONObject(message);
         Integer score1;
         Integer score2;
 
@@ -91,7 +90,7 @@ public class ClickGameImp implements  Game{
         }
 
         if (!board.isOver()) {
-            if (!obj.containsKey("row") || !obj.containsKey("col")) {
+            if (!obj.has("row") || !obj.has("col")) {
                 obj = new JSONObject();
                 obj.put(responseResource.getStatus(), responseResource.getError());
                 obj.put(responseResource.getMessage(), setup.getCommandInvalidMessage());
@@ -104,13 +103,17 @@ public class ClickGameImp implements  Game{
                     obj.put(responseResource.getMessage(), setup.getCommandAcceptedMessage());
 
                     if (board.isOver()) {
+                        obj.put(responseResource.getStatus(), setup.getGameEndStatus());
+                        obj.put(responseResource.getMessage(), setup.getGameEndMessage());
                         score1 = board.getScore(0);
                         score2 = board.getScore(1);
                         DAManager.getSingleton().getUserDAO().incScore(sock1.getClient(), score1);
                         DAManager.getSingleton().getUserDAO().incScore(sock2.getClient(), score2);
-
+                        database.User usr = sock1.getClient();
                         DAManager.getSingleton().getGameResultsDAO().addResult(sock1.getClient(), score1.longValue(),
-                                                                            sock2.getClient(), score2.longValue());
+                                                                              sock2.getClient(), score2.longValue());
+                        database.User usr_1 = DAManager.getSingleton().getUserDAO().findUser(usr.getUsername());
+                        usr_1.getGameResults();
                     }
 
                 } else {
@@ -125,8 +128,8 @@ public class ClickGameImp implements  Game{
         }
         generateStatus(obj);
 
-        sock1.sendMessage(obj.toJSONString());
-        sock2.sendMessage(obj.toJSONString());
+        sock1.sendMessage(obj.toString());
+        sock2.sendMessage(obj.toString());
     }
 
     @Override
@@ -142,8 +145,12 @@ public class ClickGameImp implements  Game{
         if (sockTo != null) {
             obj.put(responseResource.getStatus(), setup.getConnectCloseStatus());
             obj.put(responseResource.getMessage(), setup.getConnectCloseMessage());
-            sockTo.sendMessage(obj.toJSONString());
+            sockTo.sendMessage(obj.toString());
             sockTo.close();
         }
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

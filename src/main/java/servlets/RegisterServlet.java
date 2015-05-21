@@ -7,7 +7,7 @@ package servlets;
  */
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import resources.AccountManagerResource;
 import resources.ResourceProvider;
 import user.AccountManager;
@@ -37,6 +37,6 @@ public class RegisterServlet extends HttpServlet {
         HttpSession session = request.getSession();
         JSONObject result = manager.registerUser(username, password, email, session.getId());
 
-        response.getWriter().write(result.toJSONString());
+        response.getWriter().write(result.toString());
     }
 }

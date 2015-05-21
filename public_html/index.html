@@ -1,71 +1,17 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Hello, world!</title>
-<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+<html><head>
+    <meta charset="utf-8">
+    <script src="//localhost:35729/livereload.js"></script>
+    <script data-main="js/main" src="js/lib/require.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/all_sass.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
-<div id="userinfo">
-  <a href="/userpage.html"><div class="name"></div></a><br/>
-  <a onclick="logout()">Logout</a><br/>
-  <div class="email"></div>
-</div>
-
-<h1>Login</h1>
-<form name="login" id="log">
-  <input type="text" name="name" value="name"/><br/>
-  <input type="password" name="password" value="pwd"/><br/>
-  <input type="submit" value="Login"/><br/>
-  <span id="loginmsg"></span>
-</form>
-
-<script type="text/javascript">
-
-  var unsetinfo = function() {
-    $("#userinfo.name").empty();
-    $("#userinfo.email").empty();
-  }
-
-  var getinfo = function() {
-    $.ajax({
-      type: "GET",
-      url: "/getinfo",
-      success: function(data) {
-        data = jQuery.parseJSON(data);
-        $("#userinfo .name").html(data.name);
-      }
-    })
-  }
-
-  var logout = function() {
-    $.ajax({
-      type: "POST",
-      url: "/logout"
-    }).done(getinfo)
-  }
-
-  $(document).ready(getinfo)
-
-  $("#log").submit(function(event) {
-    var formdata = $("#log").serialize();
-    $.ajax({
-      type: "POST",
-      url: "/login",
-      data: formdata,
-    })
-    .done(function(data) {
-        data = jQuery.parseJSON(data);
-        $("#loginmsg").html(data.message);
-        if (data.status == "OK") {
-          getinfo();
-        } else {
-
-        }
-      });
-    event.preventDefault();
-  });
-</script>
-
+  <div id="topbar"></div>
+  <div id="page"></div>
 </body>
 </html>
+
+

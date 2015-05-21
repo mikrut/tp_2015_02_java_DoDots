@@ -1,7 +1,7 @@
 package game;
 
 import javafx.util.Pair;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 
 import java.util.Stack;
 
@@ -120,8 +120,8 @@ public class Board {
         for(Integer i = 0; i<rowSize; i++) {
             JSONArray row = new JSONArray();
             for (Integer j = 0; j<colSize; j++)
-                row.add(j, cells[i][j].getState().ordinal());
-            arr.add(i, row);
+                row.put(cells[i][j].getState().ordinal());
+            arr.put(row);
         }
         return arr;
     }

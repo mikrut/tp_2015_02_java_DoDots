@@ -10,11 +10,16 @@ import database.User;
  */
 interface MyWebSocket {
     public void sendMessage(String message);
+
     public User getClient();
+
     public void setGame(Game g);
     public Game getGame();
+
     public void close();
-    @SuppressWarnings("UnusedDeclaration")
+
     public Session getSession();
+    public void    setSession(Session s);
+
     public void setProvider(GameProvider p);
 }
