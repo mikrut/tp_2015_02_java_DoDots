@@ -37,9 +37,7 @@ public class Board {
 
 
     public boolean capture(int userIndex, Integer row, Integer col) {
-        if (userIndex == whoMoves)
-            return captureNoTurnCheck(userIndex, row, col);
-        return false;
+        return userIndex == whoMoves && captureNoTurnCheck(userIndex, row, col);
     }
 
     public boolean captureNoTurnCheck(int userIndex, Integer row, Integer col) {

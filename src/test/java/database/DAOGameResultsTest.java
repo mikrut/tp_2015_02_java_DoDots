@@ -1,28 +1,33 @@
 package database;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import resources.AccountManagerResource;
-import resources.DBResource;
 import resources.ResourceProvider;
 
 
+import java.util.Set;
+
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class DAOGameResultsTest {
     private DAOGameResults gr;
     private UserDAO manager;
+    private static SessionFactory factory;
 
     private AccountManagerResource accountManagerResource;
+
+    @BeforeClass
+    public static void init() {
+        factory = UserDAOTest.getFactory(false);
+    }
 
     @Before
     public void initialize() {
         accountManagerResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
-        SessionFactory factory = UserDAOTest.getFactory(false);
 
         gr = new DAOGameResults(factory);
         manager = new UserDAO(factory);
@@ -51,5 +56,20 @@ public class DAOGameResultsTest {
         user1 = manager.findUser(adminName);
         assertEquals("Expected count of results to be greater by one after adding result",
                 beforeCount+1, user1.getGameResults().size());
+    }
+
+    @Test
+    public void testUserLazyInitialization() {
+        User user1;
+        String adminName = accountManagerResource.getAdminName();
+        user1 = manager.findUser(adminName);
+        gr.addResult(user1, 10, user1, 20);
+        user1 = manager.findUser(adminName);
+        Set<GameResults> results = user1.getGameResults();
+        GameResults result = results.iterator().next();
+        String name1 = result.getUser1().getUsername();
+        String name2 = result.getUser2().getUsername();
+        assertTrue("Expected to get our user data",
+                adminName.equals(name1) || adminName.equals(name2));
     }
 }

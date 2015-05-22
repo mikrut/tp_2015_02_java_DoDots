@@ -41,6 +41,7 @@ public class UserDAO {
         List<User> users = criteria.list();
         Map<String, User> usersMap = new HashMap<>();
         for(User user:users) {
+            user.setParent(this);
             usersMap.put(user.getUsername(), user);
         }
         searchSession.close();
@@ -92,8 +93,14 @@ public class UserDAO {
         Session querySession = sessionFactory.openSession();
         Transaction transaction = querySession.beginTransaction();
         User usr = (User) querySession.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+        if (usr != null)
+            usr.setParent(this);
         transaction.commit();
         querySession.close();
         return usr;
+    }
+
+    public Session getSession() {
+        return sessionFactory.openSession();
     }
 }

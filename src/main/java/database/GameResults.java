@@ -19,11 +19,11 @@ public class GameResults implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long resultId;
 
-    @ManyToOne(fetch=FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch=FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name="USER1_ID", nullable = false)
     private User user1;
 
-    @ManyToOne(fetch=FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch=FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name="USER2_ID", nullable = false)
     private User user2;
 
@@ -43,7 +43,7 @@ public class GameResults implements Serializable {
     }
 
     public User getUser1() {
-        return new User(user1);
+        return user1;
     }
 
     void setUser1(User user1) {
@@ -51,7 +51,7 @@ public class GameResults implements Serializable {
     }
 
     public User getUser2() {
-        return new User(user2);
+        return user2;
     }
 
     void setUser2(User user2) {

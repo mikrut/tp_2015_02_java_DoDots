@@ -6,10 +6,14 @@ package database;
  * Package: ${PACKAGE_NAME}
  */
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.hibernate.Hibernate;
+import org.hibernate.ReplicationMode;
+import org.hibernate.Session;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,11 +38,14 @@ public class User implements Serializable {
     private Integer score = 0;
 
     @SuppressWarnings("UnusedDeclaration")
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="user1", targetEntity = GameResults.class)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="user1", targetEntity = GameResults.class)
     private Set<GameResults> gamesAsFirstPlayer;
     @SuppressWarnings({"UnusedDeclaration", "MismatchedQueryAndUpdateOfCollection"})
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="user2", targetEntity = GameResults.class)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="user2", targetEntity = GameResults.class)
     private Set<GameResults> gamesAsSecondPlayer;
+
+    @Transient
+    private UserDAO parent = null;
 
     public User() {
     }
@@ -46,6 +53,10 @@ public class User implements Serializable {
     public User(User usr) {
         this(usr.getUsername(), "something", usr.getEmail(), usr.getID(), usr.getStatus());
         passHash = usr.passHash;
+    }
+
+    public void setParent(UserDAO dao) {
+        parent = dao;
     }
 
     public User(String username, String password, String email) {
@@ -131,9 +142,18 @@ public class User implements Serializable {
     }
 
     public Set<GameResults> getGameResults() {
-        Set<GameResults> total = gamesAsFirstPlayer;
-        if (total != null)
+        if (parent != null) {
+            Session session = parent.getSession();
+            session.replicate(this, ReplicationMode.LATEST_VERSION);
+            Hibernate.initialize(this);
+
+            Set<GameResults> total = new HashSet<GameResults>();
+            total.addAll(gamesAsFirstPlayer);
             total.addAll(gamesAsSecondPlayer);
-        return total;
+            session.close();
+            return total;
+        } else {
+            return null;
+        }
     }
 }

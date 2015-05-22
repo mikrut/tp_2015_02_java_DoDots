@@ -21,8 +21,6 @@ public class DBAccountManagerTest {
 
     @Before
     public void initialize() {
-        System.out.println("configuring database");
-
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(GameResults.class);
@@ -46,14 +44,11 @@ public class DBAccountManagerTest {
 
         UserDAO dao = new UserDAO(factory);
 
-        System.out.println("Configuration complete");
         manager = new DBAccountManager(dao);
     }
 
     @Test
     public void testSigninUser() throws Exception {
-        System.out.println("Testing signin");
-
         manager.deleteUser("username");
         manager.registerUser("username", "userpassword", "email");
         User usr = manager.findUser("username");
@@ -73,8 +68,6 @@ public class DBAccountManagerTest {
 
     @Test
     public void testDeleteUser() throws Exception {
-        System.out.println("Testing deletion");
-
         manager.deleteUser("username");
         manager.registerUser("username", "userpassword", "email");
         manager.deleteUser("username");
