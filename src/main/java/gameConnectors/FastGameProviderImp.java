@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class FastGameProviderImp implements GameProvider {
     private MyWebSocket  socket = null;
-    private Map<User, MyWebSocket> socketMap = new HashMap<>();
+    private final Map<User, MyWebSocket> socketMap = new HashMap<>();
     private final GameProviderResource setup = (GameProviderResource) ResourceProvider.getProvider().getResource("gameprovider.xml");
 
     @SuppressWarnings("unchecked")

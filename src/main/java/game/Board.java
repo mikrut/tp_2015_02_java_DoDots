@@ -16,7 +16,7 @@ public class Board {
     private final int rowSize;
     private final int colSize;
     private int whoMoves = 0;
-    private int[] userClickable = new int[2];
+    private final int[] userClickable = new int[2];
     private final Integer[] score = new Integer[2];
 
     public Board(Integer rows, Integer cols) {
@@ -81,7 +81,7 @@ public class Board {
             case CAPTURED_BY_SECOND:
                 score[capturerIndex]++;
         }
-        if (cell.isFreeToCapture(cell.getState())) {
+        if (Cell.isFreeToCapture(cell.getState())) {
             userClickable[0]++;
             userClickable[1]++;
         }
@@ -90,7 +90,7 @@ public class Board {
             case CAPTURED_BY_SECOND:
                 score[1 - capturerIndex]--;
         }
-        if (cell.isFreeToCapture(previous)) {
+        if (Cell.isFreeToCapture(previous)) {
             userClickable[0]--;
             userClickable[1]--;
         }

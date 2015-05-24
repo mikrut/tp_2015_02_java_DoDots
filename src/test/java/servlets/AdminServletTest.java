@@ -31,7 +31,6 @@ import static org.mockito.Mockito.verify;
 public class AdminServletTest {
     private static String url;
     private String adminUsername;
-    private String adminPassword;
 
     private static final AccountManager mgr = new MapAccountManager();
     final private static Server server = mock(Server.class);
@@ -64,7 +63,7 @@ public class AdminServletTest {
 
         AccountManagerResource amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
         adminUsername = amResource.getAdminName();
-        adminPassword = amResource.getAdminPassword();
+        String adminPassword = amResource.getAdminPassword();
 
         response = getMockResponse(writer);
         writer.getBuffer().setLength(0);

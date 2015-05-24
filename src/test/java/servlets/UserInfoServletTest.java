@@ -1,6 +1,5 @@
 package servlets;
 
-import junit.framework.Assert;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,16 +27,15 @@ public class UserInfoServletTest {
     private static final AccountManager mgr = new MapAccountManager();
     private final UserInfoServlet infoPage = new UserInfoServlet(mgr);
 
-    final StringWriter writer = new StringWriter();
-    final String username = "username";
-    final String password = "pwd";
-    final String em = "email@mail";
-    final HttpSession session = mock(HttpSession.class);
+    private final StringWriter writer = new StringWriter();
+    private final String username = "username";
+    private final String password = "pwd";
+    private final String em = "email@mail";
+    private final HttpSession session = mock(HttpSession.class);
 
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    private static ResponseResource responseResource;
     private static AccountManagerResource amResource;
 
     HttpServletRequest getMockRequest() {
@@ -60,7 +58,7 @@ public class UserInfoServletTest {
         ServerPathResource srvPath = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
         url = srvPath.getUserInfoUrl();
 
-        responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
+        ResponseResource responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
         amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
     }
 

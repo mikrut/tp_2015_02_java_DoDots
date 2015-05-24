@@ -1,7 +1,5 @@
 package servlets;
 
-import junit.framework.Assert;
-import org.eclipse.jetty.server.Server;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,13 +26,13 @@ public class RegisterServletTest {
     private AccountManager mgr;
     private RegisterServlet registerPage;
 
-    final StringWriter writer = new StringWriter();
-    final String username = "username";
-    final String email = "e@mail.ru";
-    final String password = "pwd";
+    private final StringWriter writer = new StringWriter();
+    private final String username = "username";
+    private final String email = "e@mail.ru";
+    private final String password = "pwd";
 
-    HttpServletRequest request;
-    HttpServletResponse response;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     private static ResponseResource responseResource;
 

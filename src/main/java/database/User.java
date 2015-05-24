@@ -147,7 +147,7 @@ public class User implements Serializable {
             session.replicate(this, ReplicationMode.LATEST_VERSION);
             Hibernate.initialize(this);
 
-            Set<GameResults> total = new HashSet<GameResults>();
+            Set<GameResults> total = new HashSet<>();
             total.addAll(gamesAsFirstPlayer);
             total.addAll(gamesAsSecondPlayer);
             session.close();

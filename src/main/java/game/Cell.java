@@ -14,11 +14,12 @@ class Cell {
         FIRST_OWNED, SECOND_OWNED,
         CAPTURED_BY_FIRST, CAPTURED_BY_SECOND,
         OCCUPIED_BY_FIRST, OCCUPIED_BY_SECOND
-    };
-    State state = State.FREE;
+    }
+
+    private State state = State.FREE;
     // Row: state index
     // Column: transition in case of player(index) captureAround
-    private State[][] transitionsAround = {
+    private final State[][] transitionsAround = {
             // FREE
             {State.OCCUPIED_BY_FIRST, State.OCCUPIED_BY_SECOND},
             // FIRST_OWNED

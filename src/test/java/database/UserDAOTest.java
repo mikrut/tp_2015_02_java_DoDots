@@ -17,12 +17,12 @@ public class UserDAOTest {
     private static UserDAO manager;
     private static volatile SessionFactory factory = null;
 
-    public static UserDAO getTestDAO() {
+    private static UserDAO getTestDAO() {
         DBResource resource = (DBResource) ResourceProvider.getProvider().getResource("dbresource.xml");
         return getTestDAO(resource.getShowSql().equals("true"));
     }
 
-    public static UserDAO getTestDAO(Boolean doLog) {
+    private static UserDAO getTestDAO(Boolean doLog) {
         return new UserDAO(getFactory(doLog));
     }
 

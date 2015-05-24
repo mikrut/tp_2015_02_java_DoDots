@@ -1,6 +1,5 @@
 package servlets;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import resources.AccountManagerResource;
@@ -29,15 +28,15 @@ public class LoginServletTest {
     private static final AccountManager mgr = new MapAccountManager();
     private final LoginServlet loginPage = new LoginServlet(mgr);
 
-    final StringWriter writer = new StringWriter();
-    final String username = "username";
-    final String password = "pwd";
-    final String em = "email@mail";
+    private final StringWriter writer = new StringWriter();
+    private final String username = "username";
+    private final String password = "pwd";
+    private final String em = "email@mail";
     final private static ResponseResource respResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
-    final private static AccountManagerResource amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");;
+    final private static AccountManagerResource amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
 
-    HttpServletRequest request;
-    HttpServletResponse response;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);

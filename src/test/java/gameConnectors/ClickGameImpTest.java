@@ -28,15 +28,13 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(DAManager.class)
 public class ClickGameImpTest {
-    private MockEndpoint r1, r2;
-    private Session s1, s2;
+    private MockEndpoint r1;
     private MyWebSocket ws1, ws2;
 
     private static DAManager mgr;
-    private static SessionFactory dbSF;
     private static DAOGameResults daoGameResults;
     private static UserDAO dao;
-    private User usr1, usr2;
+    private User usr1;
     private ResponseResource responseResource;
     private GameInfoResource setup;
 
@@ -46,7 +44,7 @@ public class ClickGameImpTest {
 
     @BeforeClass
     public static void initClass() {
-        dbSF = database.UserDAOTest.getFactory(false);
+        SessionFactory dbSF = database.UserDAOTest.getFactory(false);
         dao = new UserDAO(dbSF);
         daoGameResults = new DAOGameResults(dbSF);
         dao.saveUser(new User(usr1Name, usr1Pass, usr1Mail));
@@ -57,11 +55,11 @@ public class ClickGameImpTest {
     @Before
     public void initialize() {
         r1 = getMockEndpoint();
-        r2 = getMockEndpoint();
-        s1 = getMockSession(r1);
-        s2 = getMockSession(r2);
+        MockEndpoint r2 = getMockEndpoint();
+        Session s1 = getMockSession(r1);
+        Session s2 = getMockSession(r2);
         usr1 = dao.findUser(usr1Name);
-        usr2 = dao.findUser(usr2Name);
+        User usr2 = dao.findUser(usr2Name);
         ws1 = getMockWebSocket(s1, usr1);
         ws2 = getMockWebSocket(s2, usr2);
         responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");

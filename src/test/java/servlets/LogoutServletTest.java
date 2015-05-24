@@ -21,13 +21,13 @@ public class LogoutServletTest {
     private static String url;
     private static final AccountManager mgr = new MapAccountManager();
     private final LogoutServlet logoutPage = new LogoutServlet(mgr);
-    HttpSession session;
-    HttpServletRequest request;
-    HttpServletResponse response;
+    private HttpSession session;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
-    final String username = "username";
-    final String password = "pwd";
-    final String email    = "some_email";
+    private final String username = "username";
+    private final String password = "pwd";
+    private final String email    = "some_email";
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
