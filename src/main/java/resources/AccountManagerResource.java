@@ -10,15 +10,67 @@ public class AccountManagerResource implements Resource {
     private String adminName;
     private String adminPassword;
     private String adminEmail;
+
     private String nullQueryAnswer;
     private String userAlreadyExists;
     private String incorrectPassword;
     private String userNotFound;
+
     private String authSuccess;
+
     private String registrationSuccess;
+
     private String usernameAPIName;
     private String emailAPIName;
     private String passwordAPIName;
+    private String loggedInAPIName;
+    private String scoreAPIName;
+    private String resultsAPIName;
+
+    private String guestName;
+    private String guestEmail;
+
+    private String user1APIName;
+    private String user2APIName;
+
+    private String user1ScoreAPIName;
+    private String user2ScoreAPIName;
+
+    public String getLoggedInAPIName() {
+        return loggedInAPIName;
+    }
+
+    public String getScoreAPIName() {
+        return scoreAPIName;
+    }
+
+    public String getResultsAPIName() {
+        return resultsAPIName;
+    }
+
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public String getGuestEmail() {
+        return guestEmail;
+    }
+
+    public String getUser1APIName() {
+        return user1APIName;
+    }
+
+    public String getUser2APIName() {
+        return user2APIName;
+    }
+
+    public String getUser1ScoreAPIName() {
+        return user1ScoreAPIName;
+    }
+
+    public String getUser2ScoreAPIName() {
+        return user2ScoreAPIName;
+    }
 
     public AccountManagerResource() {
     }

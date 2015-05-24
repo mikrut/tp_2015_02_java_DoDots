@@ -10,6 +10,7 @@ define('game',[
     CellView
 ){
     var View = Backbone.View.extend({
+      title: 'game',
         template: tmpl,
         first: true,
         smallViews: [],
@@ -51,11 +52,11 @@ define('game',[
               })
             })
             this.$('div.game').css({
-            "margin-left": margin + "px",
-            "margin-right": margin + "px",
-            "width": height + "px",
-            "height": height + "px",
-        });
+              "margin-left": margin + "px",
+              "margin-right": margin + "px",
+              "width": height + "px",
+              "height": height + "px",
+            });
 
           this.$('div.game__row').css({
             "height": row_height + "px",
@@ -88,5 +89,5 @@ define('game',[
         }
     });
 
-    return new View();
+    return View;
 });

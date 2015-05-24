@@ -61,7 +61,6 @@ define('board', [
       //}
     },
     dispatchMessage: function(data) {
-      debugger;
       console.log(data)
       if (data.status === "Game start") {
         this.currentStep = data.is_first;
@@ -79,24 +78,17 @@ define('board', [
       } else if (data.status === "Connected") {
         this.set("status",  "Waiting...")
         this.set("message", data.message)
-      } else if (data.status === "OK" || data.status === "Error") {
-        for (i = 0; i < this.get('rownum'); i++) {
-          for (j = 0; j < this.get('colnum'); j++) {
-            if (data.who_moves == 0)//this.myIndex)
-              x = data.board[i][j]
-            else {
-              x = 0
-              if (data.board[i][j] == 1)
-                x = 2
-              if (data.board[i][j] == 2)
-                x = 1
-            }
-            this.cells[i][j].set('playerIndex', x);
-          }
-        }
-        if (data.game_end) {
+      } else if (data.status === "OK" ||
+                 data.status === "Error" ||
+                 data.status === "GameEnd") {
+        if ('board' in data)
+        for (i = 0; i < this.get('rownum'); i++)
+          for (j = 0; j < this.get('colnum'); j++)
+            this.cells[i][j].set('playerIndex', data.board[i][j]);
+
+        if (data.game_end)
           this.set("status", "Game end!")
-        }
+
         this.set("score", data.score[this.myIndex]);
         this.currentStep = (data.who_moves == this.myIndex);
 

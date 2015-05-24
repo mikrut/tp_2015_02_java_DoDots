@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
+import resources.ServerPathResource;
 import user.AccountManager;
 import user.MapAccountManager;
 import database.User;
@@ -26,8 +29,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 public class AdminServletTest {
-    final private static String url = "/admin";
-    final private String adminUsername = "admin";
+    private static String url;
+    private String adminUsername;
+    private String adminPassword;
 
     private static final AccountManager mgr = new MapAccountManager();
     final private static Server server = mock(Server.class);
@@ -55,11 +59,17 @@ public class AdminServletTest {
 
     @Before
     public void doSetUp() throws Exception{
+        ServerPathResource srvResource = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
+        url = srvResource.getAdminInfoUrl();
+
+        AccountManagerResource amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
+        adminUsername = amResource.getAdminName();
+        adminPassword = amResource.getAdminPassword();
+
         response = getMockResponse(writer);
         writer.getBuffer().setLength(0);
 
         when(session.getId()).thenReturn("dummySessionId");
-        String adminPassword = "admin";
         mgr.authenticate(session.getId(), adminUsername, adminPassword);
         when(request.getSession()).thenReturn(session);
     }
@@ -176,18 +186,4 @@ public class AdminServletTest {
         adminPage.doGet(request, response);
         verify(response, atLeastOnce()).setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
-
-    /*
-    Getting failure (null pointer exception) for mock Server.
-    Could not find any solution yet so I leave this test commented.
-
-    If you find some alternative or simply refactor code in AdminServlet to use mock-server
-    (http://mvnrepository.com/artifact/org.mock-server/mockserver-jetty/2.9)
-    than I would appreciate your help.
-
-    @Test
-    public void testServerStop() throws Exception {
-        adminPage.doPost(request, response);
-        verify(server, atLeastOnce()).stop();
-    }*/
 }

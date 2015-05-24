@@ -1,7 +1,14 @@
 package servlets;
 
+import junit.framework.Assert;
+import org.eclipse.jetty.server.Server;
 import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import resources.ResourceProvider;
+import resources.ResponseResource;
+import resources.ServerPathResource;
 import user.AccountManager;
 import user.MapAccountManager;
 
@@ -17,9 +24,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RegisterServletTest {
-    final private static String url = "/signin";
-    private static final AccountManager mgr = new MapAccountManager();
-    private final RegisterServlet registerPage = new RegisterServlet(mgr);
+    private static String url;
+    private AccountManager mgr;
+    private RegisterServlet registerPage;
+
+    final StringWriter writer = new StringWriter();
+    final String username = "username";
+    final String email = "e@mail.ru";
+    final String password = "pwd";
+
+    HttpServletRequest request;
+    HttpServletResponse response;
+
+    private static ResponseResource responseResource;
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -36,46 +53,64 @@ public class RegisterServletTest {
         return response;
     }
 
-    @Test
-    public void testRegistration() throws Exception{
-        final StringWriter writer = new StringWriter();
-        final String username = "username";
-        final String email = "e@mail.ru";
-        final String password = "pwd";
+    @BeforeClass
+    public static void initClass() {
+        responseResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
+        ServerPathResource srvResource = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
+        url = srvResource.getSigninUrl();
+    }
 
-        HttpServletRequest request = getMockRequest();
-        HttpServletResponse response = getMockResponse(writer);
+    @Before
+    public void initialize() throws Exception {
+        request = getMockRequest();
+        response = getMockResponse(writer);
+
+        mgr = new MapAccountManager();
+        registerPage = new RegisterServlet(mgr);
 
         when(request.getParameter("name")).thenReturn(username);
         when(request.getParameter("email")).thenReturn(email);
         when(request.getParameter("password")).thenReturn(password);
 
-        registerPage.doPost(request, response);
-        validateResponse(writer.toString(), "OK");
-        writer.getBuffer().setLength(0);
-
-        registerPage.doPost(request, response);
-        validateResponse(writer.toString(), "Error");
-        writer.getBuffer().setLength(0);
-
-        when(request.getParameter("name")).thenReturn(username+"_new");
-
-        registerPage.doPost(request, response);
-        validateResponse(writer.toString(), "OK");
         writer.getBuffer().setLength(0);
     }
 
-    void validateResponse(String response, String expected) {
-        JSONObject obj = new JSONObject(response);
-        if(obj != null) {
-            if(obj.has("status") && obj.has("message")) {
-                assertEquals("Expected \""+expected+"\" status", expected, obj.get("status"));
-            } else {
-                assertTrue("Expected response to contain status string. Got only: "+response, obj.has("status"));
-                assertTrue("Expected response to contain message string. Got only: "+response, obj.has("message"));
-            }
-        } else {
-            assertTrue("Expected response to be valid. But got: "+response, false);
-        }
+    @Test
+    public void testGetResponse() throws Exception {
+        registerPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertNotNull("Expected to get valid JSON response", obj);
+    }
+
+    @Test
+    public void testHaveStatus() throws Exception {
+        registerPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertTrue("Expected to have status in response", obj.has(responseResource.getStatus()));
+    }
+
+    @Test
+    public void testHaveMessage() throws Exception {
+        registerPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertTrue("Expected to have message in response", obj.has(responseResource.getMessage()));
+    }
+
+    @Test
+    public void testSuccessRegistration() throws Exception {
+        mgr.deleteUser(username);
+        registerPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals(responseResource.getOk(), obj.get(responseResource.getStatus()));
+    }
+
+    @Test
+    public void testErrorDoubleSignin() throws Exception {
+        mgr.deleteUser(username);
+        registerPage.doPost(request, response);
+        writer.getBuffer().setLength(0);
+        registerPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals(responseResource.getError(), obj.get(responseResource.getStatus()));
     }
 }

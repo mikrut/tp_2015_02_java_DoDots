@@ -1,5 +1,12 @@
 package servlets;
 
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
+import resources.ResponseResource;
+import resources.ServerPathResource;
 import user.*;
 import org.junit.Test;
 
@@ -18,9 +25,19 @@ import static org.mockito.Mockito.*;
 import org.json.JSONObject;
 
 public class LoginServletTest {
-    final private static String url = "/login";
+    private static String url;
     private static final AccountManager mgr = new MapAccountManager();
     private final LoginServlet loginPage = new LoginServlet(mgr);
+
+    final StringWriter writer = new StringWriter();
+    final String username = "username";
+    final String password = "pwd";
+    final String em = "email@mail";
+    final private static ResponseResource respResource = (ResponseResource) ResourceProvider.getProvider().getResource("response_resource.xml");
+    final private static AccountManagerResource amResource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");;
+
+    HttpServletRequest request;
+    HttpServletResponse response;
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -37,56 +54,78 @@ public class LoginServletTest {
         return response;
     }
 
-    @Test
-    public void testLogin() throws Exception{
-        final StringWriter writer = new StringWriter();
-        final String username = "username";
-        final String password = "pwd";
-        String em = "email@mail";
+    @BeforeClass
+    public static void initClass() {
+        ServerPathResource path = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
+        url = path.getLoginUrl();
+    }
 
-        HttpServletRequest request = getMockRequest();
-        HttpServletResponse response = getMockResponse(writer);
-
-        mgr.registerUser(username, password, em);
+    @Before
+    public void initialize() throws Exception {
+        request = getMockRequest();
+        response = getMockResponse(writer);
 
         when(request.getParameter("name")).thenReturn(username);
         when(request.getParameter("password")).thenReturn(password);
 
-        loginPage.doPost(request, response);
-        validateResponse(writer.toString(), "OK");
+        mgr.deleteUser(username);
+        mgr.registerUser(username, password, em);
         writer.getBuffer().setLength(0);
+    }
 
-        when(request.getParameter("name")).thenReturn("admin");
-        when(request.getParameter("password")).thenReturn("admin");
-
+    @Test
+    public void testValidInfo() throws Exception {
         loginPage.doPost(request, response);
-        validateResponse(writer.toString(), "OK");
-        writer.getBuffer().setLength(0);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertNotNull("Expected to get valid JSON response", obj);
+    }
 
+    @Test
+    public void testHaveStatusInResponse() throws Exception {
+        loginPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertTrue("Expected to have status parameter", obj.has(respResource.getStatus()));
+    }
+
+    @Test
+    public void testHaveMessageInResponse() throws Exception {
+        loginPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertTrue("Expected to have message parameter", obj.has(respResource.getMessage()));
+    }
+
+    @Test
+    public void testSuccessLogin() throws Exception {
+        loginPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals("Expected login to be successful", respResource.getOk(), obj.getString(respResource.getStatus()));
+    }
+
+    @Test
+    public void testErrorLogIn() throws Exception {
         when(request.getParameter("name")).thenReturn(username+"_wrong");
-
         loginPage.doPost(request, response);
-        validateResponse(writer.toString(), "Error");
-        writer.getBuffer().setLength(0);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals("Expected login to fail", respResource.getError(), obj.getString(respResource.getStatus()));
+    }
 
-        when(request.getParameter("name")).thenReturn(username);
+    @Test
+    public void testErrorMessageLogIn() throws Exception {
+        when(request.getParameter("name")).thenReturn(username+"_wrong");
+        loginPage.doPost(request, response);
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals("Expected to get userNotFound message",
+                amResource.getUserNotFound(),
+                obj.getString(respResource.getMessage()));
+    }
+    @Test
+    public void testErrorMessageWrongPass() throws Exception {
         when(request.getParameter("password")).thenReturn(password+"_wrong");
-
         loginPage.doPost(request, response);
-        validateResponse(writer.toString(), "Error");
+        JSONObject obj = new JSONObject(writer.toString());
+        assertEquals("Expected to get incorrectPassword message",
+                amResource.getIncorrectPassword(),
+                obj.getString(respResource.getMessage()));
     }
 
-    void validateResponse(String response, String expected) {
-        JSONObject obj = new JSONObject(response);
-        if(obj != null) {
-            if(obj.has("status") && obj.has("message")) {
-                assertEquals("Expected \""+expected+"\" status", expected, obj.get("status"));
-            } else {
-                assertTrue("Expected response to contain status string. Got only: "+response, obj.has("status"));
-                assertTrue("Expected response to contain message string. Got only: "+response, obj.has("message"));
-            }
-        } else {
-            assertTrue("Expected response to be valid. But got: "+response, false);
-        }
-    }
 }

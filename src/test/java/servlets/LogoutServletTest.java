@@ -1,6 +1,9 @@
 package servlets;
 
+import org.junit.Before;
 import org.junit.Test;
+import resources.ResourceProvider;
+import resources.ServerPathResource;
 import user.AccountManager;
 import user.MapAccountManager;
 
@@ -15,9 +18,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.atLeastOnce;
 
 public class LogoutServletTest {
-    final private static String url = "/logout";
+    private static String url;
     private static final AccountManager mgr = new MapAccountManager();
     private final LogoutServlet logoutPage = new LogoutServlet(mgr);
+    HttpSession session;
+    HttpServletRequest request;
+    HttpServletResponse response;
+
+    final String username = "username";
+    final String password = "pwd";
+    final String email    = "some_email";
 
     HttpServletRequest getMockRequest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -27,30 +37,46 @@ public class LogoutServletTest {
         return request;
     }
 
-    @Test
-    public void testLogout() throws Exception {
-        final String username = "username";
-        final String password = "pwd";
-        final String email    = "some_email";
-        final HttpSession session = mock(HttpSession.class);
+    @Before
+    public void initialize() {
+        ServerPathResource srvpResource = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
+        url = srvpResource.getLogoutUrl();
 
+        session = mock(HttpSession.class);
         when(session.getId()).thenReturn("sessionId");
 
-        HttpServletRequest request = getMockRequest();
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        request = getMockRequest();
+        when(request.getSession()).thenReturn(session);
+
+        response = mock(HttpServletResponse.class);
 
         mgr.registerUser(username, password, email);
         mgr.authenticate(session.getId(), username, password);
+    }
 
+    @Test
+    public void testLogout() throws Exception {
         Integer beforeCount = mgr.getSessionCount();
-        when(request.getSession()).thenReturn(session);
 
         logoutPage.doPost(request, response);
         assertEquals("Expected less sessions than before logout", new Integer(beforeCount-1), mgr.getSessionCount());
+
+        beforeCount = mgr.getSessionCount();
+        logoutPage.doPost(request, response);
+        assertEquals("Expected as much sessions as before logout", beforeCount, mgr.getSessionCount());
+    }
+
+    @Test
+    public void testRedirect() throws Exception {
+        logoutPage.doPost(request, response);
         verify(response, atLeastOnce()).sendRedirect("/");
+    }
+
+    @Test
+    public void testNoLogout() throws Exception {
+        Integer beforeCount = mgr.getSessionCount();
 
         when(session.getId()).thenReturn("sessionId_wrong");
-        beforeCount = mgr.getSessionCount();
         logoutPage.doPost(request, response);
         assertEquals("Expected as much sessions as before logout", beforeCount, mgr.getSessionCount());
     }

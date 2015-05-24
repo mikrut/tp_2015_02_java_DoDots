@@ -2,6 +2,8 @@ package servlets;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import resources.AccountManagerResource;
+import resources.ResourceProvider;
 import user.AccountManager;
 import database.GameResults;
 import database.User;
@@ -19,6 +21,7 @@ import java.io.IOException;
  */
 public class UserInfoServlet extends HttpServlet {
     private final AccountManager manager;
+    private static final AccountManagerResource resource = (AccountManagerResource) ResourceProvider.getProvider().getResource("account.xml");
 
     public UserInfoServlet(AccountManager mgr) {
         manager = mgr;
@@ -32,31 +35,41 @@ public class UserInfoServlet extends HttpServlet {
         User usr = manager.getAuthenticated(session.getId());
         JSONObject answer = new JSONObject();
 
+        String username = resource.getGuestName();
+        String email = resource.getGuestEmail();
+        Integer score = 0;
+        JSONArray results = null;
+
+        boolean loggedIn = false;
+
+
         if (usr != null) {
-            JSONArray results = new JSONArray();
+            results = new JSONArray();
             if (usr.getGameResults() != null) {
                 for(GameResults result: usr.getGameResults()) {
                     JSONObject resultInJSON = new JSONObject();
-                    resultInJSON.put("user1", result.getUser1().getUsername());
-                    resultInJSON.put("score1", result.getUser1Score());
-                    resultInJSON.put("user2", result.getUser2().getUsername());
-                    resultInJSON.put("score2", result.getUser2Score());
+
+                    resultInJSON.put(resource.getUser1APIName(), result.getUser1().getUsername());
+                    resultInJSON.put(resource.getUser1ScoreAPIName(), result.getUser1Score());
+
+                    resultInJSON.put(resource.getUser2APIName(), result.getUser2().getUsername());
+                    resultInJSON.put(resource.getUser2ScoreAPIName(), result.getUser2Score());
+
                     results.put(resultInJSON);
                 }
             }
 
-            answer.put("loggedIn", true);
-            answer.put("username", usr.getUsername());
-            answer.put("email",    usr.getEmail());
-            answer.put("score",    usr.getScore());
-            answer.put("results",  results);
-        } else {
-            answer.put("loggedIn", false);
-            answer.put("username", "Guest");
-            answer.put("email",    "none");
-            answer.put("score",    0);
-            answer.put("results",  (Object) null);
+            username = usr.getUsername();
+            email = usr.getEmail();
+            score = usr.getScore();
+            loggedIn = true;
         }
+
+        answer.put(resource.getLoggedInAPIName(), loggedIn);
+        answer.put(resource.getUsernameAPIName(), username);
+        answer.put(resource.getEmailAPIName(),    email);
+        answer.put(resource.getScoreAPIName(),    score);
+        answer.put(resource.getResultsAPIName(),  results);
 
         response.getWriter().write(answer.toString());
     }
