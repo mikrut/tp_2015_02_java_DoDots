@@ -35,6 +35,7 @@ class Main {
         Servlet userInfo = new UserInfoServlet(mgr);
         Servlet admin    = new AdminServlet(server, mgr);
         Servlet game     = new WebSocketGameServlet(mgr);
+        Servlet mobile   = new WebSocketMobileServlet();
 
         ServerPathResource paths = (ServerPathResource) ResourceProvider.getProvider().getResource("server_path.xml");
 
@@ -45,6 +46,8 @@ class Main {
         context.addServlet(new ServletHolder(userInfo), paths.getUserInfoUrl());
         context.addServlet(new ServletHolder(admin),    paths.getAdminInfoUrl());
         context.addServlet(new ServletHolder(game),     paths.getWebSocketUrl());
+        context.addServlet(new ServletHolder(mobile),   "/mobile");
+
 
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);

@@ -7,7 +7,16 @@ package resources;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class DBResource implements Resource {
-    private String dbURL, dbUser, dbPassword, dbName, dbTestName, dbDialect, dbDriverClassName, showSql, hbm2DdlAuto, flushMode;
+    private String dbURL;
+    private String dbUser;
+    private String dbPassword;
+    private String dbName;
+    private String dbTestName;
+    private String dbDialect;
+    private String dbDriverClassName;
+    private String showSql;
+    private String hbm2DdlAuto;
+    private String flushMode;
 
     public String getDbURL() {
         return dbURL;

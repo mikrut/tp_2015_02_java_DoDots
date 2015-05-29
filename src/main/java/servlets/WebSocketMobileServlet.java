@@ -1,29 +1,26 @@
 package servlets;
 
-import gameConnectors.GameWebSocketFactory;
+import gameConnectors.MobileWebSocketFactory;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-import user.AccountManager;
 
 import javax.servlet.annotation.WebServlet;
 
 /**
  * Created by mihanik
- * 31.03.15 9:15
- * Package: ${PACKAGE_NAME}
+ * 27.05.15 23:40
+ * Package: servlets
  */
-@WebServlet(name = "WebSocketGameServlet", urlPatterns = {"/game"})
-public class WebSocketGameServlet extends WebSocketServlet {
-    private final static int LOGOUT_TIME = 10 * 60 * 1000;
-    private final AccountManager manager;
 
-    public WebSocketGameServlet(AccountManager man) {
-        manager = man;
-    }
+@WebServlet(name = "WebSocketGameServlet", urlPatterns = {"/game"})
+public class WebSocketMobileServlet extends WebSocketServlet {
+    private final static int LOGOUT_TIME = 10 * 60 * 1000;
+
+    public WebSocketMobileServlet() {}
 
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(LOGOUT_TIME);
-        factory.setCreator(new GameWebSocketFactory(manager));
+        factory.setCreator(new MobileWebSocketFactory());
     }
 }

@@ -26,6 +26,7 @@ public class AccountManagerResource implements Resource {
     private String loggedInAPIName;
     private String scoreAPIName;
     private String resultsAPIName;
+    private String isAdminName;
 
     private String guestName;
     private String guestEmail;
@@ -46,6 +47,10 @@ public class AccountManagerResource implements Resource {
 
     public String getResultsAPIName() {
         return resultsAPIName;
+    }
+
+    public String getIsAdminName() {
+        return isAdminName;
     }
 
     public String getGuestName() {

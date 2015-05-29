@@ -12,10 +12,10 @@ import java.util.Stack;
  */
 public class Board {
     private Cell cells[][] = null;
-    private boolean gameOver = false;
+    private volatile boolean gameOver = false;
     private final int rowSize;
     private final int colSize;
-    private int whoMoves = 0;
+    private volatile int whoMoves = 0;
     private final int[] userClickable = new int[2];
     private final Integer[] score = new Integer[2];
 
@@ -36,11 +36,11 @@ public class Board {
     }
 
 
-    public boolean capture(int userIndex, Integer row, Integer col) {
+    public synchronized boolean capture(int userIndex, Integer row, Integer col) {
         return userIndex == whoMoves && captureNoTurnCheck(userIndex, row, col);
     }
 
-    public boolean captureNoTurnCheck(int userIndex, Integer row, Integer col) {
+    public synchronized boolean captureNoTurnCheck(int userIndex, Integer row, Integer col) {
         if (!gameOver &&
                 row >= 0 && row < rowSize &&
                 col >= 0 && col < rowSize) {
@@ -56,8 +56,8 @@ public class Board {
                 if (userClickable[1 - userIndex] > 0) {
                     whoMoves = 1 - userIndex;
                 } else {
-                    gameOver = true;
                     finalCount();
+                    gameOver = true;
                 }
                 return true;
             }
@@ -65,7 +65,7 @@ public class Board {
         return false;
     }
 
-    void finalCount() {
+    private void finalCount() {
         for(int i = 0; i < rowSize; i++)
             for(int j = 0; j < colSize; j++) {
                 Cell.State previous = cells[i][j].getState();
@@ -75,7 +75,7 @@ public class Board {
             }
     }
 
-    void countScore(Cell.State previous, Cell cell, int capturerIndex) {
+    private void countScore(Cell.State previous, Cell cell, int capturerIndex) {
         switch (cell.getState()) {
             case CAPTURED_BY_FIRST:
             case CAPTURED_BY_SECOND:
@@ -96,7 +96,7 @@ public class Board {
         }
     }
 
-    public void captureMandatory(int userIndex, int row, int col) {
+    public synchronized void captureMandatory(int userIndex, int row, int col) {
         Cell.State previous = cells[row][col].getState();
         cells[row][col].setState(
                 Cell.State.values()[
@@ -106,7 +106,7 @@ public class Board {
         countScore(previous, cells[row][col], userIndex);
     }
 
-    void captureInCycle(int userIndex, int row, int col) {
+    private void captureInCycle(int userIndex, int row, int col) {
         Cell.State previous = cells[row][col].getState();
         cells[row][col].captureAround(userIndex);
         countScore(previous, cells[row][col], userIndex);
@@ -124,7 +124,7 @@ public class Board {
         return arr;
     }
 
-    public void setCellType(int type, int row, int col) {
+    public synchronized void setCellType(int type, int row, int col) {
         cells[row][col].setState(type);
     }
 
@@ -140,7 +140,7 @@ public class Board {
         return score[index];
     }
 
-    void unmarkAll() {
+    private void unmarkAll() {
         for(int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
                 cells[i][j].unmark();
@@ -148,7 +148,7 @@ public class Board {
         }
     }
 
-    void findCycles(Integer row, Integer col, int userIndex) {
+    private void findCycles(Integer row, Integer col, int userIndex) {
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
                 if (!(i==0 && j==0) &&
@@ -162,7 +162,7 @@ public class Board {
     }
 
     @SuppressWarnings("unchecked")
-    void tryInsideCycle(Integer row, Integer col, int userIndex) {
+    private void tryInsideCycle(Integer row, Integer col, int userIndex) {
         Stack<Pair<Integer, Integer>> toVisit = new Stack<>(), toCapture = new Stack<>();
         int curRow, curCol;
         Pair<Integer, Integer> current;
@@ -200,20 +200,20 @@ public class Board {
         }
     }
 
-    boolean cellExists(int row, int col) {
+    private boolean cellExists(int row, int col) {
         return (row >= 0 && row < rowSize &&
                 col >= 0 && col < colSize &&
                 cells[row][col] != null);
     }
 
-    boolean isBorder(int row, int col) {
+    private boolean isBorder(int row, int col) {
         return  (row == 0 || row == rowSize -1 ||
                 col == 0 || col == colSize -1) &&
                 row >= 0 && row <= rowSize -1 &&
                 col >= 0 && col <= colSize -1;
     }
 
-    boolean insideBorderCell(int row, int col) {
+    private boolean insideBorderCell(int row, int col) {
         return  row > 0 && row < rowSize -1 &&
                 col > 0 && col < colSize -1 &&
                 cells[row][col] != null;

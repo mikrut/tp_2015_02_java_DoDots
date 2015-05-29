@@ -41,6 +41,7 @@ public class UserInfoServlet extends HttpServlet {
         JSONArray results = null;
 
         boolean loggedIn = false;
+        boolean isAdmin  = false;
 
 
         if (usr != null) {
@@ -63,6 +64,7 @@ public class UserInfoServlet extends HttpServlet {
             email = usr.getEmail();
             score = usr.getScore();
             loggedIn = true;
+            isAdmin = usr.getStatus() == User.Rights.ADMIN;
         }
 
         answer.put(resource.getLoggedInAPIName(), loggedIn);
@@ -70,6 +72,7 @@ public class UserInfoServlet extends HttpServlet {
         answer.put(resource.getEmailAPIName(),    email);
         answer.put(resource.getScoreAPIName(),    score);
         answer.put(resource.getResultsAPIName(),  results);
+        answer.put(resource.getIsAdminName(),     isAdmin);
 
         response.getWriter().write(answer.toString());
     }

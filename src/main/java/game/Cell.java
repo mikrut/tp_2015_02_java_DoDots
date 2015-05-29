@@ -16,7 +16,7 @@ class Cell {
         OCCUPIED_BY_FIRST, OCCUPIED_BY_SECOND
     }
 
-    private State state = State.FREE;
+    private volatile State state = State.FREE;
     // Row: state index
     // Column: transition in case of player(index) captureAround
     private final State[][] transitionsAround = {
@@ -37,13 +37,13 @@ class Cell {
 
     };
 
-    private Boolean isMarked = false;
+    private volatile Boolean isMarked = false;
 
-    public void captureAround(int playerIndex) {
+    public synchronized void captureAround(int playerIndex) {
         state = transitionsAround[state.ordinal()][playerIndex];
     }
 
-    public boolean captureUsual(int playerIndex) {
+    public synchronized boolean captureUsual(int playerIndex) {
         switch (state) {
             case FREE:
                 state = State.values()[State.FIRST_OWNED.ordinal()+playerIndex];
@@ -67,11 +67,11 @@ class Cell {
         }
     }
 
-    public void setState(State state) {
+    public synchronized void setState(State state) {
         this.state = state;
     }
 
-    public void setState(int stateId) {
+    public synchronized void setState(int stateId) {
         this.state = State.values()[stateId];
     }
 

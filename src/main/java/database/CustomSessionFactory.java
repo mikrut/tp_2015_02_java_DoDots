@@ -15,7 +15,7 @@ import resources.ResourceProvider;
 abstract class CustomSessionFactory implements SessionFactory {
     private static final SessionFactory factory = createFactory();
 
-    private static SessionFactory createFactory() {
+    private synchronized static SessionFactory createFactory() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(GameResults.class);

@@ -28,6 +28,7 @@
   <loggedInAPIName>loggedIn</loggedInAPIName>
   <scoreAPIName>score</scoreAPIName>
   <resultsAPIName>results</resultsAPIName>
+  <isAdminName>is_admin</isAdminName>
 
   <guestName>Guest</guestName>
   <guestEmail>none</guestEmail>

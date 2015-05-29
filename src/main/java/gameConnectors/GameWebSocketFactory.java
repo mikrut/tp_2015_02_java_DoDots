@@ -11,17 +11,18 @@ import database.User;
  * 31.03.15 9:15
  * Package: ${PACKAGE_NAME}
  */
-public class WebSocketFactory implements WebSocketCreator {
+public class GameWebSocketFactory implements WebSocketCreator {
     private final AccountManager manager;
     private final GameProvider prov;
 
-    public WebSocketFactory(AccountManager manager) {
+    public GameWebSocketFactory(AccountManager manager) {
         prov = new FastGameProviderImp();
         this.manager = manager;
     }
 
     @Override
-    public Object createWebSocket(ServletUpgradeRequest request, ServletUpgradeResponse response) {
+    public Object createWebSocket(ServletUpgradeRequest request,
+                                  ServletUpgradeResponse response) {
         User usr = null;
         if((request != null) && request.getSession()!=null)
             usr = manager.getAuthenticated(request.getSession().getId());
